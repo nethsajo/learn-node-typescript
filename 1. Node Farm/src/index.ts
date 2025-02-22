@@ -2,6 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import * as fs from 'fs';
 import * as http from 'http';
+import * as url from 'url';
 import { Product } from './types/product';
 
 const replaceTemplate = (card: string, product: Product) => {
@@ -18,27 +19,30 @@ const replaceTemplate = (card: string, product: Product) => {
   return output;
 };
 
-const overview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
-const card = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
-const product = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+const _overview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const _card = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const _product = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
 
 const data = fs.readFileSync(`${__dirname}/data/data.json`, 'utf-8');
 const products = JSON.parse(data) as Product[];
 
 const server = http.createServer((request: IncomingMessage, response: ServerResponse) => {
-  const pathName = request.url;
+  const { query, pathname } = url.parse(request.url ?? '', true);
 
-  if (pathName === '/' || pathName === '/overview') {
+  if (pathname === '/' || pathname === '/overview') {
     response.writeHead(200, { 'Content-type': 'text/html' });
 
-    const productList = products.map(product => replaceTemplate(card, product)).join('');
+    const productList = products.map(product => replaceTemplate(_card, product)).join('');
 
-    const output = overview.replace(/{%PRODUCT_LIST%}/g, productList);
+    const output = _overview.replace(/{%PRODUCT_LIST%}/g, productList);
 
     response.end(output);
-  } else if (pathName === '/product') {
-    response.end('This is the PRODUCT page!');
-  } else if (pathName === '/api') {
+  } else if (pathname === '/product') {
+    response.writeHead(200, { 'Content-type': 'text/html' });
+    const product = products[Number(query.id)] as Product;
+    const output = replaceTemplate(_product, product);
+    response.end(output);
+  } else if (pathname === '/api') {
     response.writeHead(200, { 'Content-type': 'application/json' });
     response.end(data);
   } else {
