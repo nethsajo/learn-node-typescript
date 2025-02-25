@@ -2,6 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import * as fs from 'fs';
 import * as http from 'http';
+import slugify from 'slugify';
 import * as url from 'url';
 import { replaceTemplate } from './modules/replace-template';
 import { Product } from './types/product';
@@ -12,6 +13,10 @@ const _product = fs.readFileSync(`${__dirname}/templates/template-product.html`,
 
 const data = fs.readFileSync(`${__dirname}/data/data.json`, 'utf-8');
 const products = JSON.parse(data) as Product[];
+
+const slugs = products.map(({ productName }) => slugify(productName, { lower: true }));
+
+console.log(slugs);
 
 const server = http.createServer((request: IncomingMessage, response: ServerResponse) => {
   const { query, pathname } = url.parse(request.url ?? '', true);

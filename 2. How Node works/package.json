@@ -1,0 +1,15 @@
+{
+  "name": "how-node-works",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx watch ./index.ts"
+  },
+  "dependencies": {
+    "@types/node": "^22.13.5",
+    "typescript": "^5.7.3",
+    "prettier": "^3.5.2",
+    "tsx": "^4.19.3"
+  }
+}
