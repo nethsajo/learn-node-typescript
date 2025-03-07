@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
 import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
 import { APP_PORT } from './env';
-import { Tour } from './types/tour';
+import { Tour, tourSchemaObject } from './types/tour';
 
 const app = express();
 
@@ -14,7 +15,7 @@ const app = express();
 
 app.use(express.json());
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/data/tours-simple.json`, 'utf-8')) as Tour[];
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/mock/tours-simple.json`, 'utf-8')) as Tour[];
 
 app.get('/api/v1/tours', (request: Request, response: Response) => {
   response.status(StatusCodes.OK).json({
@@ -28,18 +29,38 @@ app.get('/api/v1/tours', (request: Request, response: Response) => {
 
 app.post('/api/v1/tours', (request: Request, response: Response) => {
   const newId = tours[tours.length - 1]?.id ?? 0 + 1;
-  const newTour = Object.assign({ id: newId }, request.body);
 
-  tours.push(newTour);
+  try {
+    const tour = tourSchemaObject.parse({ ...request.body, id: newId });
 
-  fs.writeFile(`${__dirname}/data/tours-simple.json`, JSON.stringify(tours), error => {
-    response.status(StatusCodes.CREATED).json({
-      status: 'success',
-      data: {
-        tour: newTour,
-      },
+    tours.push(tour);
+
+    fs.writeFile(`${__dirname}/data/tours-simple.json`, JSON.stringify(tours), error => {
+      if (error) {
+        response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          status: 'fail',
+          message: 'Error writing file',
+        });
+      }
+
+      response.status(StatusCodes.CREATED).json({
+        status: 'success',
+        data: { tour },
+      });
     });
-  });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      response.status(StatusCodes.BAD_REQUEST).json({
+        status: 'fail',
+        message: error.errors, // Returns detailed validation errors
+      });
+    }
+
+    response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 'fail',
+      message: 'Something went wrong',
+    });
+  }
 });
 
 app.listen(APP_PORT, () => {

@@ -17,6 +17,7 @@
   "dependencies": {
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
-    "http-status-codes": "^2.3.0"
+    "http-status-codes": "^2.3.0",
+    "zod": "^3.24.2"
   }
 }
