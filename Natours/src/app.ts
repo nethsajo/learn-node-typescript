@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
-import { APP_PORT } from './env';
+import { envConfig } from './env';
 import { Tour, tourSchemaObject } from './types/tour';
 
 const app = express();
@@ -63,6 +63,6 @@ app.post('/api/v1/tours', (request: Request, response: Response) => {
   }
 });
 
-app.listen(APP_PORT, () => {
-  console.log('Listening on port', APP_PORT);
+app.listen(envConfig.APP_PORT, () => {
+  console.log('Listening on port', envConfig.APP_PORT);
 });
