@@ -25,7 +25,9 @@ app.use((request: Request & { requestTime?: string }, response: Response, next: 
 });
 
 /* Routes */
-routes.forEach(route => app.use('/api/v1', route));
+routes.forEach(route => {
+  app.use('/api/v1', route);
+});
 
 /* Server */
 app.listen(envConfig.APP_PORT, () => {
