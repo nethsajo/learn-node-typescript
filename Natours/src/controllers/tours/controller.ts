@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
 import { Tour, tourSchemaObject } from 'src/types/tour';
@@ -7,6 +7,19 @@ import { z } from 'zod';
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}../../../mock/tours-simple.json`, 'utf-8')
 ) as Tour[];
+
+export const checkId = (request: Request, response: Response, next: NextFunction, id: string) => {
+  const tour = tours.find(tour => tour.id === Number(id));
+
+  if (!tour) {
+    return response.status(StatusCodes.NOT_FOUND).json({
+      status: 'fail',
+      message: 'Invalid ID: Tour not found',
+    });
+  }
+
+  next();
+};
 
 export const getTours = (request: Request & { requestTime?: string }, response: Response) => {
   response.status(StatusCodes.OK).json({
@@ -23,13 +36,6 @@ export const getTour = (request: Request, response: Response) => {
   const { id } = request.params;
 
   const tour = tours.find(tour => tour.id === Number(id));
-
-  if (!tour) {
-    return response.status(StatusCodes.NOT_FOUND).json({
-      status: 'fail',
-      message: 'Invalid ID: Tour not found',
-    });
-  }
 
   response.status(StatusCodes.OK).json({
     status: 'success',
@@ -80,13 +86,6 @@ export const updateTour = (request: Request, response: Response) => {
 
   const tour = tours.find(tour => tour.id === Number(id));
 
-  if (!tour) {
-    return response.status(StatusCodes.NOT_FOUND).json({
-      status: 'fail',
-      message: 'Invalid ID: Tour not found',
-    });
-  }
-
   response.status(StatusCodes.OK).json({
     status: 'success',
     data: {
@@ -96,17 +95,6 @@ export const updateTour = (request: Request, response: Response) => {
 };
 
 export const deleteTour = (request: Request, response: Response) => {
-  const { id } = request.params;
-
-  const tour = tours.find(tour => tour.id === Number(id));
-
-  if (!tour) {
-    return response.status(StatusCodes.NOT_FOUND).json({
-      status: 'fail',
-      message: 'Invalid ID: Tour not found',
-    });
-  }
-
   response.status(StatusCodes.OK).json({
     status: 'success',
     data: null,
