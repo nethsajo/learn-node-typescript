@@ -1,9 +1,5 @@
 import express from 'express';
-import { archiveUser } from './archive-user';
-import { createUser } from './create-user';
-import { getUser } from './get-user';
-import { getUsers } from './get-users';
-import { updateUser } from './update-user';
+import { archiveUser, createUser, getUser, getUsers, updateUser } from './controller';
 
 const usersRoutes = express.Router();
 
