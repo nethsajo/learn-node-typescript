@@ -14,8 +14,11 @@
     "noUncheckedIndexedAccess": true,
 
     /* Paths */
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", ".eslintrc.json"],
   "exclude": ["./node_modules"]
 }

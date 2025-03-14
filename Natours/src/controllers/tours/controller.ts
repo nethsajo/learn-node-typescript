@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
+import { type NextFunction, type Request, type Response } from 'express';
 import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
-import { Tour, tourSchemaObject } from 'src/types/tour';
+import { type Tour, tourSchemaObject } from 'src/types/tour';
 import { z } from 'zod';
 
 const tours = JSON.parse(
