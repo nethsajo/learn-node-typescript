@@ -1,7 +1,7 @@
-import express from 'express';
+import express, { type Router } from 'express';
 import { checkId, createTour, deleteTour, getTour, getTours, updateTour } from './controller';
 
-const toursRoutes = express.Router();
+const toursRoutes: Router = express.Router();
 
 // toursRoutes.param('id', (request: Request, response: Response, next: NextFunction, id: string) => {
 //   console.log(`Tour id is: ${id}`);
