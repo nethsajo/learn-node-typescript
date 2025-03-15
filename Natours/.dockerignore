@@ -1,0 +1,10 @@
+node_modules/
+
+*-lock.json
+*.lock
+
+.env
+.env.*
+.env-*
+
+!**.example
