@@ -15,9 +15,9 @@
       {
         "fixToUnknown": true
       }
-    ],
+    ]
 
     /* Others */
-    "no-console": "error"
+    // "no-console": "off"
   }
 }
