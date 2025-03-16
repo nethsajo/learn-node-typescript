@@ -4,6 +4,9 @@
   "description": "",
   "scripts": {
     "dev": "tsx watch ./src/app.ts",
+    "clean": "rm -rf ./dist",
+    "build": "tsup",
+    "start": "node ./dist/app.js",
     "test": "SET NODE_ENV=test & tsx watch ./src/app.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "pnpm lint --fix"
@@ -22,10 +25,13 @@
     "@types/node": "^22.13.9",
     "@typescript-eslint/eslint-plugin": "^8.13.0",
     "@typescript-eslint/parser": "^8.13.0",
+    "cspell": "^8.17.5",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.5.3",
+    "tsup": "^8.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
-  }
+  },
+  "packageManager": "pnpm@9.12.0"
 }

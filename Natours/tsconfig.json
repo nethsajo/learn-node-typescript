@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     /* Defaults */
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "ESNext",
@@ -17,8 +16,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    /* Bundling */
+    "moduleResolution": "Bundler",
+    "outDir": "./dist"
   },
   "include": ["**/*.ts", ".eslintrc.json"],
-  "exclude": ["./node_modules"]
+  "exclude": ["./node_modules", "./dist"]
 }

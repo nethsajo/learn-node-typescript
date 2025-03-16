@@ -1,0 +1,17 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [],
+  "ignorePaths": [
+    "./node_modules",
+    "./dist",
+    "./databases",
+    "*.config.js",
+    "*.config.ts",
+    "*.config.cjs",
+    "./package.json",
+    "./pnpm-lock.yaml",
+    "./Dockerfile",
+    "./docker-compose.yaml"
+  ]
+}
