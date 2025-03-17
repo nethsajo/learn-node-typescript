@@ -1,0 +1,23 @@
+name: natours-db
+
+services:
+  mysql:
+    image: mysql:8.4.4
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
+      MYSQL_USER: ${MYSQL_DB_USER}
+      MYSQL_PASSWORD: ${MYSQL_DB_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+    ports:
+      - '${MYSQL_DB_PORT}:3306'
+    volumes:
+      - ./volumes/databases/mysql/data:/var/lib/mysql
+    restart: on-failure
+
+  adminer:
+    image: adminer:4.8.1
+    ports:
+      - '${ADMINER_PORT}:8080'
+    depends_on:
+      - mysql

@@ -5,13 +5,14 @@
   "ignorePaths": [
     "./node_modules",
     "./dist",
-    "./databases",
+    "./volumes",
     "*.config.js",
     "*.config.ts",
     "*.config.cjs",
     "./package.json",
     "./pnpm-lock.yaml",
     "./Dockerfile",
-    "./docker-compose.yaml"
+    "./docker-compose.yaml",
+    "./docker-compose-db.yaml"
   ]
 }
