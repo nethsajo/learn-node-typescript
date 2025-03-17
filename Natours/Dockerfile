@@ -40,6 +40,9 @@ COPY --from=builder --chown=natours:nodejs /builder/node_modules /runner/node_mo
 COPY --from=builder --chown=natours:nodejs /builder/dist /runner/dist
 COPY --from=builder --chown=natours:nodejs /builder/package.json /runner/package.json
 
+# Copy mock data directory to maintain relative path structure
+COPY --from=builder --chown=natours:nodejs /builder/src/mock /mock
+
 # Switch to non-root user for security
 USER natours
 
@@ -47,4 +50,4 @@ USER natours
 EXPOSE 3000
 
 # Define the command to run the app
-CMD ["node", "/runner/dist/app.mjs"]
+CMD ["node", "/runner/dist/app.js"]

@@ -4,8 +4,14 @@ import { StatusCodes } from 'http-status-codes';
 import { type Tour, tourSchemaObject } from 'src/types/tour';
 import { z } from 'zod';
 
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}../../../mock/tours-simple.json`, 'utf-8')
+  fs.readFileSync(path.join(__dirname, '../../mock/tours-simple.json'), 'utf-8')
 ) as Tour[];
 
 export const checkId = (request: Request, response: Response, next: NextFunction, id: string) => {
@@ -82,9 +88,9 @@ export const createTour = (request: Request, response: Response) => {
 };
 
 export const updateTour = (request: Request, response: Response) => {
-  const { id } = request.params;
+  // const { id } = request.params;
 
-  const tour = tours.find(tour => tour.id === Number(id));
+  // const tour = tours.find(tour => tour.id === Number(id));
 
   response.status(StatusCodes.OK).json({
     status: 'success',

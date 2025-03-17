@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     /* Defaults */
+    "module": "ESNext",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "ESNext",
@@ -19,7 +20,7 @@
     },
 
     /* Bundling */
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "outDir": "./dist"
   },
   "include": ["**/*.ts", ".eslintrc.json"],
