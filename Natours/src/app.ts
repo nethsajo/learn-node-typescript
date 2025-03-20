@@ -1,30 +1,16 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import morgan from 'morgan';
 import { routes } from './controllers/routes';
-import { envConfig, isTest } from './env';
+import { createDbClient } from './db/create-db-client';
+import { envConfig } from './env';
+
+const dbClient = createDbClient();
 
 const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
-
-if (isTest()) {
-  console.log('Test');
-}
-
-/***
- * Middleware
- * Basically a function that can modify the incoming request data
- * It's just a step that the request goes through while it's being processed
- *  */
-
 app.use((request: Request, response: Response, next: NextFunction) => {
-  console.log('Hello from the middleware');
-  // If the next didn't call here then the request/response cycle would stuck and never send back a response to the client
-  next();
-});
-
-app.use((request: Request & { requestTime?: string }, response: Response, next: NextFunction) => {
-  request.requestTime = new Date().toISOString();
+  response.locals.dbClient = dbClient;
   next();
 });
 

@@ -1,8 +1,9 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": [],
+  "words": ["Kysely"],
   "ignorePaths": [
+    "./.env",
     "./node_modules",
     "./dist",
     "./volumes",
