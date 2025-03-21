@@ -9,7 +9,7 @@
     "build": "tsup",
     "start": "node ./dist/app.js",
     "db:start": "docker compose -f ./docker-compose-db.yaml up -d",
-    "db:stop": "docker compose -f ./docker-compose-db.yaml down -v",
+    "db:stop": "docker compose -f ./docker-compose-db.yaml down",
     "db:create": "prisma migrate dev --create-only",
     "test": "SET NODE_ENV=test & tsx watch ./src/app.ts",
     "lint": "eslint . --ext .ts",
