@@ -1,6 +1,6 @@
 import { type User } from '@/db/schema';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
-import { extendZodWithOpenApi } from 'zod-openapi';
 
 extendZodWithOpenApi(z);
 
@@ -24,4 +24,5 @@ export const userSchemaObject = {
 };
 
 export const userSchema = z.object(userSchemaObject) satisfies z.ZodType<User>;
-export const userSchemaOpenApi = userSchema.openapi({ ref: 'User' });
+export const userSchemaOpenApi = userSchema.openapi('User');
+export const userSchemaFields = z.enum(Object.keys(userSchemaObject) as [string, ...string[]]);
