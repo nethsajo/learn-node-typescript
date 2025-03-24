@@ -4,6 +4,7 @@
   "words": ["asteasolutions", "Kysely"],
   "ignorePaths": [
     "./.env",
+    "./prisma",
     "./node_modules",
     "./dist",
     "./volumes",
