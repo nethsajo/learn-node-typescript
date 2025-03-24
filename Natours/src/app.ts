@@ -6,11 +6,10 @@ import { version } from '../package.json';
 import { routes } from './controllers/routes';
 import { schemas } from './data/schemas';
 import { envConfig } from './env';
+import { errorHandlerMiddleware } from './middlewares/error-handler';
 import { registry } from './utils/registry';
 
 const app = express();
-app.use(express.json());
-app.use(morgan('dev'));
 
 app.use(
   '/swagger',
@@ -35,6 +34,10 @@ app.use(
 Object.entries(schemas).forEach(([key, value]) => {
   registry.register(key, value);
 });
+
+app.use(errorHandlerMiddleware);
+app.use(express.json());
+app.use(morgan('dev'));
 
 /* Routes */
 routes.forEach(route => {
