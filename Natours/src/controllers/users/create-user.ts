@@ -50,10 +50,7 @@ export const createUserRouteHandler = async (request: Request, response: Respons
 
   const body = createUserSchema.body.parse(request.body);
 
-  const createdUser = await createUserData({
-    dbClient,
-    values: body,
-  });
+  const createdUser = await createUserData({ dbClient, values: body });
 
   if (!createdUser) throw new NotFoundError('No user created. Please try again.');
 
