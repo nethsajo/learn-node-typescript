@@ -1,14 +1,13 @@
 import { routes } from '@/controllers/routes';
 import { schemas } from '@/data/schemas';
 import { errorHandlerMiddleware } from '@/middlewares/error-handler';
-import { registry } from '@/utils/registry';
-import { OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
+import { generateOpenAPISpec, registry } from '@/utils/registry';
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
-import { version } from '../package.json';
 import { envConfig } from './env';
+import { apiReference } from '@scalar/express-api-reference';
 
 const app = express();
 
@@ -17,25 +16,22 @@ Object.entries(schemas).forEach(([key, value]) => {
   registry.register(key, value);
 });
 
+app.get('/openapi.json', (req, res) => {
+  res.json(generateOpenAPISpec(registry.definitions));
+});
+
 app.use(
   '/swagger',
   swaggerUi.serve,
-  swaggerUi.setup(
-    new OpenApiGeneratorV3(registry.definitions).generateDocument({
-      openapi: '3.0.0',
-      info: {
-        version,
-        title: `${envConfig.STAGE.toUpperCase()} API`,
-        description: 'API Documentation',
-      },
-      externalDocs: {
-        description: 'API Reference',
-        url: '/reference',
-      },
-    }),
-    { customCss: '.topbar { display: none; }' }
-  )
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: '/openapi.json', // Load OpenAPI spec dynamically
+    },
+    customCss: '.topbar { display: none; }',
+  })
 );
+
+app.use('/reference', apiReference({ url: '/openapi.json' }));
 
 /* Middleware */
 app.use(cors());
