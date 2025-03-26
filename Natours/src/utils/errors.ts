@@ -1,6 +1,14 @@
 import { StatusCodes } from 'http-status-codes';
 import { ZodError } from 'zod';
 
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'BadRequestError';
+    this.message = message;
+  }
+}
+
 export class NotFoundError extends Error {
   constructor(message: string) {
     super(message);
@@ -20,6 +28,13 @@ export function makeError<TError extends Error>(error: TError) {
     return {
       statusCode: StatusCodes.BAD_REQUEST,
       error: { name: 'BadRequestError', message: error.message },
+    };
+  }
+
+  if (error instanceof BadRequestError) {
+    return {
+      statusCode: StatusCodes.BAD_REQUEST,
+      error: defaultError,
     };
   }
 
