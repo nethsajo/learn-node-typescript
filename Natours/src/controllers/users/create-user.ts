@@ -3,7 +3,7 @@ import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
 import { createDbClient } from '@/db/create-db-client';
 import { NotFoundError } from '@/utils/errors';
 import { registry } from '@/utils/registry';
-import { type Request, type Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { type z } from 'zod';
 
@@ -45,14 +45,22 @@ export const createUserRoute = registry.registerPath({
   },
 });
 
-export const createUserRouteHandler = async (request: Request, response: Response) => {
-  const dbClient = createDbClient();
+export const createUserRouteHandler = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  try {
+    const dbClient = createDbClient();
 
-  const body = createUserSchema.body.parse(request.body);
+    const body = createUserSchema.body.parse(request.body);
 
-  const createdUser = await createUserData({ dbClient, values: body });
+    const createdUser = await createUserData({ dbClient, values: body });
 
-  if (!createdUser) throw new NotFoundError('No user created. Please try again.');
+    if (!createdUser) throw new NotFoundError('No user created. Please try again.');
 
-  return response.status(StatusCodes.CREATED).json(createdUser);
+    return response.status(StatusCodes.CREATED).json(createdUser);
+  } catch (error) {
+    next(error);
+  }
 };
