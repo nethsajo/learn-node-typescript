@@ -8,7 +8,6 @@ export function errorHandlerMiddleware(
   response: Response,
   next: NextFunction
 ) {
-  console.log(err instanceof ZodError);
   const { error, statusCode } = makeError(err);
   return response.status(statusCode).json({ error });
 }
