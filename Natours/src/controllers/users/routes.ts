@@ -1,11 +1,17 @@
 import express, { type Router } from 'express';
-import { archiveUser, getUser, updateUser } from './controller';
+import { archiveUser, updateUser } from './controller';
 import { createUserRouteHandler } from './create-user';
 import { getUsersRouteHandler } from './get-users';
+import { getUserRouteHandler } from './get-user';
+import { updateUserRouteHandler } from './update-user';
 
 const usersRoutes: Router = express.Router();
 
-usersRoutes.route('/users').get(getUsersRouteHandler).post(createUserRouteHandler);
-usersRoutes.route('/users/:id').get(getUser).put(updateUser).delete(archiveUser);
+usersRoutes.get('/users', getUsersRouteHandler);
+usersRoutes.post('/users', createUserRouteHandler);
+
+usersRoutes.get('/users/:id', getUserRouteHandler);
+usersRoutes.put('/users/:id', updateUserRouteHandler);
+usersRoutes.delete('/users/:id', archiveUser);
 
 export default usersRoutes;
