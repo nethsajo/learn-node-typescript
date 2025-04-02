@@ -1,13 +1,9 @@
 import { makeError } from '@/utils/errors';
-import { type NextFunction, type Request, type Response } from 'express';
-import { ZodError } from 'zod';
+import { logger } from '@/utils/logger';
+import type { NextFunction, Request, Response } from 'express';
 
-export function errorHandlerMiddleware(
-  err: Error,
-  request: Request,
-  response: Response,
-  next: NextFunction
-) {
+export function errorHandlerMiddleware(err: Error, request: Request, response: Response, next: NextFunction) {
   const { error, statusCode } = makeError(err);
+  logger.error(error.message, error);
   return response.status(statusCode).json({ error });
 }
