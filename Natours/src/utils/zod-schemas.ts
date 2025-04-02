@@ -8,8 +8,8 @@ export const paginationSchema = z.object({
 });
 
 export const listQuerySchema = z.object({
-  limit: z.coerce.number().optional(),
-  page: z.coerce.number().optional(),
+  limit: z.coerce.number().optional().default(25),
+  page: z.coerce.number().optional().default(1),
   order_by: z.enum(['asc', 'desc']).optional(),
   include_archived: z.enum(['true', 'false']).optional(),
 });
