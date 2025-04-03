@@ -26,6 +26,9 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.21.2
+      express-async-errors:
+        specifier: ^3.1.1
+        version: 3.1.1(express@4.21.2)
       express-http-context:
         specifier: ^1.2.5
         version: 1.2.5
@@ -1400,6 +1403,11 @@ packages:
   execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
     engines: {node: '>=10'}
+
+  express-async-errors@3.1.1:
+    resolution: {integrity: sha512-h6aK1da4tpqWSbyCa3FxB/V6Ehd4EEB15zyQq9qe75OZBp0krinNKuH4rAY+S/U/2I36vdLAUFSjQJ+TFmODng==}
+    peerDependencies:
+      express: ^4.16.2
 
   express-http-context@1.2.5:
     resolution: {integrity: sha512-3wH4zvH7hkD/b0EJfAM7fafMzPqr7tKqWaVXJrEt6GH+U1a0WykIjoFY3pJbAke9Z78q6znz1Cpgm+Q5VsQsmw==}
@@ -4197,6 +4205,10 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
+
+  express-async-errors@3.1.1(express@4.21.2):
+    dependencies:
+      express: 4.21.2
 
   express-http-context@1.2.5:
     dependencies:

@@ -1,3 +1,4 @@
+import 'express-async-errors';
 import { routes } from '@/controllers/routes';
 import { schemas } from '@/data/schemas';
 import { errorHandlerMiddleware } from '@/middlewares/error-handler';
@@ -33,7 +34,7 @@ app.use(
 
 app.use('/reference', apiReference({ url: '/openapi.json' }));
 
-/* Middleware */
+/* Middlewares */
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
