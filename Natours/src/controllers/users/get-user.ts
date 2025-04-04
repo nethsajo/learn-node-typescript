@@ -2,7 +2,7 @@ import { userSchemaOpenApi } from '@/data/users/schema';
 import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
 import { z } from 'zod';
-import type { NextFunction, Request, Response } from 'express';
+import { type RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { getUserData } from '@/data/users/get-user';
 
@@ -37,19 +37,11 @@ export const getUserRoute = registry.registerPath({
   },
 });
 
-export const getUserRouteHandler = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  try {
-    const dbClient = createDbClient();
-    const id = Number(request.params.id);
+export const getUserRouteHandler: RequestHandler = async (request, response) => {
+  const dbClient = createDbClient();
+  const id = Number(request.params.id);
 
-    const user = await getUserData({ dbClient, id });
+  const user = await getUserData({ dbClient, id });
 
-    return response.status(StatusCodes.OK).json({ user });
-  } catch (error) {
-    next(error);
-  }
+  return response.status(StatusCodes.OK).json({ user });
 };

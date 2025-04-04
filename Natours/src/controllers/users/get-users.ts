@@ -3,7 +3,7 @@ import { userSchemaFields, userSchemaOpenApi } from '@/data/users/schema';
 import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
 import { listQuerySchema, paginationSchema } from '@/utils/zod-schemas';
-import type { NextFunction, Request, Response } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
@@ -41,22 +41,18 @@ export const getUsersRoute = registry.registerPath({
   },
 });
 
-export const getUsersRouteHandler = async (request: Request, response: Response, next: NextFunction) => {
-  try {
-    const dbClient = createDbClient();
-    const query = getUsersSchema.query.parse(request.query);
+export const getUsersRouteHandler: RequestHandler = async (request, response) => {
+  const dbClient = createDbClient();
+  const query = getUsersSchema.query.parse(request.query);
 
-    const data = await getUsersData({
-      dbClient,
-      sortBy: query?.sort_by as GetUsersDataArgs['sortBy'],
-      orderBy: query?.order_by,
-      limit: query?.limit,
-      page: query?.page,
-      includeArchieve: query?.include_archived === 'true',
-    });
+  const data = await getUsersData({
+    dbClient,
+    sortBy: query?.sort_by as GetUsersDataArgs['sortBy'],
+    orderBy: query?.order_by,
+    limit: query?.limit,
+    page: query?.page,
+    includeArchieve: query?.include_archived === 'true',
+  });
 
-    return response.status(StatusCodes.OK).json({ data });
-  } catch (error) {
-    next(error);
-  }
+  return response.status(StatusCodes.OK).json({ data });
 };

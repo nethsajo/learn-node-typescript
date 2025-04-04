@@ -2,7 +2,7 @@ import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
 import { updateUserData } from '@/data/users/update-user';
 import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
-import type { NextFunction, Request, Response } from 'express';
+import { type RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
@@ -47,20 +47,12 @@ export const updateUserRoute = registry.registerPath({
   },
 });
 
-export const updateUserRouteHandler = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  try {
-    const dbClient = createDbClient();
-    const id = Number(request.params.id);
-    const body = updateUserSchema.body.parse(request.body);
+export const updateUserRouteHandler: RequestHandler = async (request, response) => {
+  const dbClient = createDbClient();
+  const id = Number(request.params.id);
+  const body = updateUserSchema.body.parse(request.body);
 
-    const user = await updateUserData({ dbClient, id, values: body });
+  const user = await updateUserData({ dbClient, id, values: body });
 
-    return response.status(StatusCodes.OK).json({ user });
-  } catch (error) {
-    next(error);
-  }
+  return response.status(StatusCodes.OK).json({ user });
 };
