@@ -1,11 +1,10 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
-import { type Tour, tourSchemaObject } from 'src/types/tour';
-import { z } from 'zod';
-
 import path, { dirname } from 'path';
+import { type Tour, tourSchemaObject } from 'src/types/tour';
 import { fileURLToPath } from 'url';
+import { z } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

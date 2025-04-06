@@ -1,11 +1,12 @@
-import { getUsersData, type GetUsersDataArgs } from '@/data/users/get-users';
+import type { RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
+
+import { getUsersData,type GetUsersDataArgs } from '@/data/users/get-users';
 import { userSchemaFields, userSchemaOpenApi } from '@/data/users/schema';
 import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
 import { listQuerySchema, paginationSchema } from '@/utils/zod-schemas';
-import type { RequestHandler } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { z } from 'zod';
 
 export const getUsersSchema = {
   query: listQuerySchema.extend({

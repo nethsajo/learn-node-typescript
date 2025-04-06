@@ -1,10 +1,11 @@
+import { type RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
+
+import { getUserData } from '@/data/users/get-user';
 import { userSchemaOpenApi } from '@/data/users/schema';
 import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
-import { z } from 'zod';
-import { type RequestHandler } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { getUserData } from '@/data/users/get-user';
 
 export const getUserSchema = {
   params: z.object({

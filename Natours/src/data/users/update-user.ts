@@ -1,8 +1,10 @@
-import type { DbClient } from '@/db/create-db-client';
-import type { UpdateUser } from './schema';
-import type { User } from '@/db/schema';
 import { sql } from 'kysely';
+
+import type { DbClient } from '@/db/create-db-client';
+import type { User } from '@/db/schema';
 import { NotFoundError } from '@/utils/errors';
+
+import type { UpdateUser } from './schema';
 
 export type UpdateUserDataArgs = {
   dbClient: DbClient;

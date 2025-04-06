@@ -1,4 +1,5 @@
 import express, { type Router } from 'express';
+
 import { checkId, createTour, deleteTour, getTour, getTours, updateTour } from './controller';
 
 const toursRoutes: Router = express.Router();

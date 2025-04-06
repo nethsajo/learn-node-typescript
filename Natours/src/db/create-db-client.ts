@@ -1,6 +1,8 @@
-import { envConfig } from '@/env';
 import { Kysely, MysqlDialect } from 'kysely';
 import mysql2 from 'mysql2';
+
+import { envConfig } from '@/env';
+
 import { type KyselySchema } from './schema';
 
 export function createDbClient() {

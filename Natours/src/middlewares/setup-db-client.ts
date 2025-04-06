@@ -1,5 +1,6 @@
-import { createDbClient } from '@/db/create-db-client';
 import { type NextFunction, type Request, type Response } from 'express';
+
+import { createDbClient } from '@/db/create-db-client';
 
 const dbClient = createDbClient();
 

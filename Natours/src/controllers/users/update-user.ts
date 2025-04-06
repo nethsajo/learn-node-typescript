@@ -1,10 +1,11 @@
+import { type RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
+
 import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
 import { updateUserData } from '@/data/users/update-user';
 import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
-import { type RequestHandler } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { z } from 'zod';
 
 export const updateUserSchema = {
   params: z.object({

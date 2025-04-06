@@ -1,7 +1,10 @@
 {
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  "plugins": [],
+  "plugins": ["simple-import-sort"],
   "rules": {
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+
     /* TypeScript */
     "@typescript-eslint/consistent-type-imports": [
       "warn",
@@ -15,9 +18,9 @@
       {
         "fixToUnknown": true
       }
-    ]
+    ],
 
     /* Others */
-    // "no-console": "off"
+    "no-console": "error"
   }
 }

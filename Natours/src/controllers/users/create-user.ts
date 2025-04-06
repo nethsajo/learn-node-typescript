@@ -1,11 +1,12 @@
+import { type RequestHandler } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { type z } from 'zod';
+
 import { createUserData } from '@/data/users/create-user';
 import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
 import { createDbClient } from '@/db/create-db-client';
 import { NotFoundError } from '@/utils/errors';
 import { registry } from '@/utils/registry';
-import { type RequestHandler } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { type z } from 'zod';
 
 export const createUserSchema = {
   body: userSchema.pick({

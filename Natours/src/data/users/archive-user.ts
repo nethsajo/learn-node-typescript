@@ -1,7 +1,8 @@
+import { sql } from 'kysely';
+
 import type { DbClient } from '@/db/create-db-client';
 import type { User } from '@/db/schema';
 import { NotFoundError } from '@/utils/errors';
-import { sql } from 'kysely';
 
 export type ArchiveDataUserArgs = {
   dbClient: DbClient;

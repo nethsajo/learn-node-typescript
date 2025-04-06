@@ -1,14 +1,18 @@
 import 'express-async-errors';
-import { routes } from '@/controllers/routes';
-import { schemas } from '@/data/schemas';
-import { errorHandlerMiddleware } from '@/middlewares/error-handler';
-import { generateOpenAPISpec, registry } from '@/utils/registry';
+
+import { apiReference } from '@scalar/express-api-reference';
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
+
+import { routes } from '@/controllers/routes';
+import { schemas } from '@/data/schemas';
+import { errorHandlerMiddleware } from '@/middlewares/error-handler';
+import { generateOpenAPISpec, registry } from '@/utils/registry';
+
 import { envConfig } from './env';
-import { apiReference } from '@scalar/express-api-reference';
+import { logger } from './utils/logger';
 
 const app = express();
 
@@ -50,5 +54,5 @@ app.use(errorHandlerMiddleware);
 
 /* Server */
 app.listen(envConfig.APP_PORT, () => {
-  console.log('Listening on port', envConfig.APP_PORT);
+  logger.info('Listening on port', envConfig.APP_PORT);
 });

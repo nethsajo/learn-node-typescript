@@ -46,6 +46,7 @@
     "cspell": "^8.17.5",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "prettier": "^3.5.3",
     "prisma": "^6.5.0",
     "swagger-jsdoc": "^6.2.8",

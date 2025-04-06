@@ -1,10 +1,11 @@
-import { userSchemaOpenApi } from '@/data/users/schema';
-import { registry } from '@/utils/registry';
-import { z } from 'zod';
-import type { Request, Response, NextFunction } from 'express';
-import { createDbClient } from '@/db/create-db-client';
-import { archiveUserData } from '@/data/users/archive-user';
+import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
+
+import { archiveUserData } from '@/data/users/archive-user';
+import { userSchemaOpenApi } from '@/data/users/schema';
+import { createDbClient } from '@/db/create-db-client';
+import { registry } from '@/utils/registry';
 
 export const archiveUserSchema = {
   params: z.object({

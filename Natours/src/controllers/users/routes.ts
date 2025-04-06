@@ -1,9 +1,10 @@
 import express, { type Router } from 'express';
-import { createUserRouteHandler } from './create-user';
-import { getUsersRouteHandler } from './get-users';
-import { getUserRouteHandler } from './get-user';
-import { updateUserRouteHandler } from './update-user';
+
 import { archiveUserRouteHandler } from './archive-user';
+import { createUserRouteHandler } from './create-user';
+import { getUserRouteHandler } from './get-user';
+import { getUsersRouteHandler } from './get-users';
+import { updateUserRouteHandler } from './update-user';
 
 const usersRoutes: Router = express.Router();
 
