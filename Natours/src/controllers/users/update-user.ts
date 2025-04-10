@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
 import { updateUserData } from '@/data/users/update-user';
-import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
 
 export const updateUserSchema = {
@@ -49,7 +48,7 @@ export const updateUserRoute = registry.registerPath({
 });
 
 export const updateUserRouteHandler: RequestHandler = async (request, response) => {
-  const dbClient = createDbClient();
+  const dbClient = request.dbClient;
   const id = Number(request.params.id);
   const body = updateUserSchema.body.parse(request.body);
 

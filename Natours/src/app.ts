@@ -12,6 +12,7 @@ import { errorHandlerMiddleware } from '@/middlewares/error-handler';
 import { generateOpenAPISpec, registry } from '@/utils/registry';
 
 import { envConfig } from './env';
+import { setupDbClientMiddleware } from './middlewares/setup-db-client';
 import { logger } from './utils/logger';
 
 const app = express();
@@ -43,7 +44,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(setupDbClientMiddleware);
+app.use(setupDbClientMiddleware);
 
 /* Routes */
 routes.forEach(route => {

@@ -2,9 +2,8 @@ import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
-import { getUsersData,type GetUsersDataArgs } from '@/data/users/get-users';
+import { getUsersData, type GetUsersDataArgs } from '@/data/users/get-users';
 import { userSchemaFields, userSchemaOpenApi } from '@/data/users/schema';
-import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
 import { listQuerySchema, paginationSchema } from '@/utils/zod-schemas';
 
@@ -43,7 +42,7 @@ export const getUsersRoute = registry.registerPath({
 });
 
 export const getUsersRouteHandler: RequestHandler = async (request, response) => {
-  const dbClient = createDbClient();
+  const dbClient = request.dbClient;
   const query = getUsersSchema.query.parse(request.query);
 
   const data = await getUsersData({
@@ -52,7 +51,7 @@ export const getUsersRouteHandler: RequestHandler = async (request, response) =>
     orderBy: query?.order_by,
     limit: query?.limit,
     page: query?.page,
-    includeArchieve: query?.include_archived === 'true',
+    includeArchive: query?.include_archived === 'true',
   });
 
   return response.status(StatusCodes.OK).json({ data });

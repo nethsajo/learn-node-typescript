@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import { getUserData } from '@/data/users/get-user';
 import { userSchemaOpenApi } from '@/data/users/schema';
-import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
 
 export const getUserSchema = {
@@ -39,7 +38,7 @@ export const getUserRoute = registry.registerPath({
 });
 
 export const getUserRouteHandler: RequestHandler = async (request, response) => {
-  const dbClient = createDbClient();
+  const dbClient = request.dbClient;
   const id = Number(request.params.id);
 
   const user = await getUserData({ dbClient, id });

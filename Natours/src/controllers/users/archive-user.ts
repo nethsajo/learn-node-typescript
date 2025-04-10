@@ -1,10 +1,9 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
 import { archiveUserData } from '@/data/users/archive-user';
 import { userSchemaOpenApi } from '@/data/users/schema';
-import { createDbClient } from '@/db/create-db-client';
 import { registry } from '@/utils/registry';
 
 export const archiveUserSchema = {
@@ -38,19 +37,11 @@ export const archiveUserRoute = registry.registerPath({
   },
 });
 
-export const archiveUserRouteHandler = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  try {
-    const dbClient = createDbClient();
-    const id = Number(request.params.id);
+export const archiveUserRouteHandler: RequestHandler = async (request, response) => {
+  const dbClient = request.dbClient;
+  const id = Number(request.params.id);
 
-    const user = await archiveUserData({ dbClient, id });
+  const user = await archiveUserData({ dbClient, id });
 
-    return response.status(StatusCodes.OK).json({ user });
-  } catch (error) {
-    next(error);
-  }
+  return response.status(StatusCodes.OK).json({ user });
 };

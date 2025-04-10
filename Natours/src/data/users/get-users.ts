@@ -9,7 +9,7 @@ export type GetUsersDataArgs = {
   page?: number;
   sortBy?: keyof User;
   orderBy?: 'asc' | 'desc';
-  includeArchieve?: boolean;
+  includeArchive?: boolean;
 };
 
 export async function getUsersData({
@@ -18,11 +18,11 @@ export async function getUsersData({
   page = 1,
   sortBy = 'created_at',
   orderBy = 'desc',
-  includeArchieve = false,
+  includeArchive = false,
 }: GetUsersDataArgs) {
   let query = dbClient.selectFrom('users');
 
-  if (!includeArchieve) {
+  if (!includeArchive) {
     query = query.where('deleted_at', 'is', null);
   }
 
