@@ -24,3 +24,17 @@ model users {
   @@index([first_name])
   @@index([last_name])
 }
+
+model locations {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now()) @db.DateTime(6)
+  updated_at DateTime  @default(now()) @db.DateTime(6)
+  deleted_at DateTime?
+  name       String?
+
+  // Indexes
+  @@index([created_at])
+  @@index([updated_at])
+  @@index([deleted_at])
+  @@index([name])
+}
