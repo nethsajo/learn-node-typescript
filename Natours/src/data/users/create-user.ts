@@ -10,17 +10,15 @@ export type CreateUserDataArgs = {
 export async function createUserData({ dbClient, values }: CreateUserDataArgs) {
   const result = await dbClient.insertInto('users').values(values).executeTakeFirstOrThrow();
 
-  const insertId = result.insertId;
+  const insertedId = result.insertId;
 
-  if (insertId === undefined) {
-    throw new Error('Failed to retrieve insertId from the database');
-  }
+  if (insertedId === undefined) throw new Error('Failed to retrieve inserted id from the database');
 
   // Fetch the inserted record using the generated ID
   const createdRecord = await dbClient
     .selectFrom('users')
     .selectAll()
-    .where('id', '=', Number(insertId))
+    .where('id', '=', Number(insertedId))
     .executeTakeFirstOrThrow();
 
   return createdRecord;

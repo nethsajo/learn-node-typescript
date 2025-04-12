@@ -17,7 +17,8 @@ export type ArchiveUserParams = z.infer<typeof archiveUserSchema.params>;
 export type ArchiveUserResponse = z.infer<typeof archiveUserSchema.response>;
 
 export const archiveUserRoute = registry.registerPath({
-  method: 'delete',
+  security: [{ bearerAuth: [] }],
+  method: 'put',
   path: '/api/v1/users/{id}/archive',
   tags: ['Users'],
   summary: 'Archive a user',
@@ -32,7 +33,7 @@ export const archiveUserRoute = registry.registerPath({
           schema: archiveUserSchema.response,
         },
       },
-      description: 'User retrieved successfully',
+      description: 'User archived successfully',
     },
   },
 });
@@ -41,7 +42,7 @@ export const archiveUserRouteHandler: RequestHandler = async (request, response)
   const dbClient = request.dbClient;
   const id = Number(request.params.id);
 
-  const user = await archiveUserData({ dbClient, id });
+  const archivedUser = await archiveUserData({ dbClient, id });
 
-  return response.status(StatusCodes.OK).json({ user });
+  return response.status(StatusCodes.OK).json({ archivedUser });
 };

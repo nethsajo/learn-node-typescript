@@ -21,6 +21,7 @@ export type GetUsersQuery = z.infer<typeof getUsersSchema.query>;
 export type GetUsersResponse = z.infer<typeof getUsersSchema.response>;
 
 export const getUsersRoute = registry.registerPath({
+  security: [{ bearerAuth: [] }],
   method: 'get',
   path: '/api/v1/users',
   tags: ['Users'],

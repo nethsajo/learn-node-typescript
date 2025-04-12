@@ -19,6 +19,7 @@ export type CreateUserBody = z.infer<typeof createUserSchema.body>;
 export type CreateUserResponse = z.infer<typeof createUserSchema.response>;
 
 export const createUserRoute = registry.registerPath({
+  security: [{ bearerAuth: [] }],
   method: 'post',
   path: '/api/v1/users',
   tags: ['Users'],

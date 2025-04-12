@@ -20,6 +20,7 @@ export const updateUserSchema = {
 };
 
 export const updateUserRoute = registry.registerPath({
+  security: [{ bearerAuth: [] }],
   method: 'put',
   path: '/api/v1/users/{id}',
   tags: ['Users'],
@@ -52,7 +53,7 @@ export const updateUserRouteHandler: RequestHandler = async (request, response) 
   const id = Number(request.params.id);
   const body = updateUserSchema.body.parse(request.body);
 
-  const user = await updateUserData({ dbClient, id, values: body });
+  const updatedUser = await updateUserData({ dbClient, id, values: body });
 
-  return response.status(StatusCodes.OK).json({ user });
+  return response.status(StatusCodes.OK).json({ updatedUser });
 };
