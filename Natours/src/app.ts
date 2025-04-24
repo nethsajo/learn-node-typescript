@@ -22,8 +22,8 @@ Object.entries(schemas).forEach(([key, value]) => {
   registry.register(key, value);
 });
 
-app.get('/openapi.json', (req, res) => {
-  res.json(generateOpenAPISpec(registry.definitions));
+app.get('/openapi.json', (request, response) => {
+  response.json(generateOpenAPISpec(registry.definitions));
 });
 
 app.use(
