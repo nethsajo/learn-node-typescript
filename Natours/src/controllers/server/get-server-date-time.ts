@@ -1,5 +1,5 @@
 import { getServerDateTimeData } from '@/data/server/get-server-date-time';
-import { registry } from '@/utils/registry';
+import { registry } from '@/lib/openapi';
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';

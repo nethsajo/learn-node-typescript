@@ -6,7 +6,7 @@ import { createLocationData } from '@/data/locations/create-location';
 import { locationSchema } from '@/data/locations/schema';
 import { userSchemaOpenApi } from '@/data/users/schema';
 import { NotFoundError } from '@/utils/errors';
-import { registry } from '@/utils/registry';
+import { registry } from '@/lib/openapi';
 
 export const createLocationSchema = {
   body: locationSchema.pick({

@@ -9,7 +9,7 @@ import swaggerUi from 'swagger-ui-express';
 import { routes } from '@/controllers/routes';
 import { schemas } from '@/data/schemas';
 import { errorHandlerMiddleware } from '@/middlewares/error-handler';
-import { generateOpenAPISpec, registry } from '@/utils/registry';
+import { generateOpenAPISpec, registry } from '@/lib/openapi';
 
 import { envConfig } from './env';
 import { setupDbClientMiddleware } from './middlewares/setup-db-client';

@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { archiveUserData } from '@/data/users/archive-user';
 import { userSchemaOpenApi } from '@/data/users/schema';
-import { registry } from '@/utils/registry';
+import { registry } from '@/lib/openapi';
 
 export const archiveUserSchema = {
   params: z.object({

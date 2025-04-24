@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { getUserData } from '@/data/users/get-user';
 import { userSchemaOpenApi } from '@/data/users/schema';
-import { registry } from '@/utils/registry';
+import { registry } from '@/lib/openapi';
 
 export const getUserSchema = {
   params: z.object({

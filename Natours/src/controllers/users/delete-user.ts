@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { deleteUserData } from '@/data/users/delete-user';
 import { userSchemaOpenApi } from '@/data/users/schema';
-import { registry } from '@/utils/registry';
+import { registry } from '@/lib/openapi';
 
 export const deleteUserSchema = {
   params: z.object({

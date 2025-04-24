@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { getUsersData, type GetUsersDataArgs } from '@/data/users/get-users';
 import { userSchemaFields, userSchemaOpenApi } from '@/data/users/schema';
-import { registry } from '@/utils/registry';
+import { registry } from '@/lib/openapi';
 import { listQuerySchema, paginationSchema } from '@/utils/zod-schemas';
 
 export const getUsersSchema = {

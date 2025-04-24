@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
 import { updateUserData } from '@/data/users/update-user';
-import { registry } from '@/utils/registry';
+import { registry } from '@/lib/openapi';
 
 export const updateUserSchema = {
   params: z.object({
