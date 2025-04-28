@@ -1,8 +1,9 @@
-import { getServerDateTimeData } from '@/data/server/get-server-date-time';
-import { registry } from '@/lib/openapi';
-import { RequestHandler } from 'express';
+import { type RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
+
+import { getServerDateTimeData } from '@/data/server/get-server-date-time';
+import { registry } from '@/lib/openapi';
 
 export const getServerDateTimeSchema = {
   response: z.string(),
