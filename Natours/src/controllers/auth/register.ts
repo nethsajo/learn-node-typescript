@@ -1,8 +1,10 @@
-import { registry } from '@/lib/openapi';
-import { emailSchema, passwordSchema } from '@/utils/zod-schemas';
-import { RequestHandler } from 'express';
+import { type RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
+
+import { registry } from '@/lib/openapi';
+import { registerAuthService } from '@/services/auth/register';
+import { emailSchema, passwordSchema } from '@/utils/zod-schemas';
 
 export const registerAuthSchema = {
   body: z.object({ email: emailSchema, password: passwordSchema }),
@@ -44,7 +46,7 @@ export const registerAuthRouteHandler: RequestHandler = async (request, response
   const dbClient = request.dbClient;
   const body = registerAuthSchema.body.parse(request.body);
 
-  console.log(body);
+  await registerAuthService({ dbClient, payload: body });
 
   return response.status(StatusCodes.CREATED).json('Account registered successfully');
 };

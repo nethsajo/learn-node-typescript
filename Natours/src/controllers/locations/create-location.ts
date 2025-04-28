@@ -5,8 +5,8 @@ import { type z } from 'zod';
 import { createLocationData } from '@/data/locations/create-location';
 import { locationSchema } from '@/data/locations/schema';
 import { userSchemaOpenApi } from '@/data/users/schema';
-import { NotFoundError } from '@/utils/errors';
 import { registry } from '@/lib/openapi';
+import { NotFoundError } from '@/utils/errors';
 
 export const createLocationSchema = {
   body: locationSchema.pick({

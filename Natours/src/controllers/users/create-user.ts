@@ -4,8 +4,8 @@ import { type z } from 'zod';
 
 import { createUserData } from '@/data/users/create-user';
 import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
-import { NotFoundError } from '@/utils/errors';
 import { registry } from '@/lib/openapi';
+import { NotFoundError } from '@/utils/errors';
 
 export const createUserSchema = {
   body: userSchema.pick({

@@ -1,6 +1,7 @@
+import { sql } from 'kysely';
+
 import { type DbClient } from '@/db/create-db-client';
 import { formatDateToISO } from '@/utils/date';
-import { sql } from 'kysely';
 
 export type GetServerDateTimeDataArgs = {
   dbClient: DbClient;
