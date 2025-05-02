@@ -34,9 +34,7 @@ export async function registerAuthService({
       email: payload.email,
     });
 
-    if (existingAccount) {
-      throw new BadRequestError('Account already exists.');
-    }
+    if (existingAccount) throw new BadRequestError('Account already exists.');
 
     const hashedPassword = dependencies.hashText({ text: payload.password });
 
