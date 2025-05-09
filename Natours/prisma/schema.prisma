@@ -17,8 +17,9 @@ model accounts {
   email      String    @unique
   password   String
 
-	// Relations
-  user users?
+  // Relations
+  user     users?
+  sessions sessions[]
 
   // Indexes
   @@index([created_at])
@@ -27,19 +28,38 @@ model accounts {
   @@index([email])
 }
 
+model sessions {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+
+  // Foreign Keys
+  account_id Int?
+
+  // Relations
+  account accounts? @relation(fields: [account_id], references: [id])
+
+  // Indexes
+  @@index([created_at])
+  @@index([updated_at])
+  @@index([deleted_at])
+  @@index([account_id])
+}
+
 model users {
-  id         Int        @id @default(autoincrement())
-  created_at DateTime   @default(now())
-  updated_at DateTime   @default(now())
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
   deleted_at DateTime?
   first_name String?
   last_name  String?
 
-	// Foreign Keys
-	account_id Int?   @unique
+  // Foreign Keys
+  account_id Int? @unique
 
-	// Relations
-	account accounts? @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  // Relations
+  account accounts? @relation(fields: [account_id], references: [id], onDelete: Cascade)
 
   // Indexes
   @@index([created_at])
