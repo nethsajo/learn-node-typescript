@@ -2,13 +2,17 @@ import { type RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
+import { COOKIE_NAMES } from '@/constants/cookies';
 import { registry } from '@/lib/openapi';
 import { loginAuthService } from '@/services/auth/login';
 import { emailSchema, passwordSchema } from '@/utils/zod-schemas';
 
 export const loginAuthSchema = {
   body: z.object({ email: emailSchema, password: passwordSchema }),
-  response: z.string(),
+  response: z.object({
+    access_token: z.string(),
+    refresh_token: z.string(),
+  }),
 };
 
 export type LoginAuthBody = z.infer<typeof loginAuthSchema.body>;
@@ -46,7 +50,28 @@ export const loginAuthRouteHandler: RequestHandler = async (request, response) =
   const dbClient = request.dbClient;
   const body = loginAuthSchema.body.parse(request.body);
 
-  await loginAuthService({ dbClient, payload: body });
+  const { accessToken, refreshToken } = await loginAuthService({ dbClient, payload: body });
 
-  return response.status(StatusCodes.OK).json('Login successfully.');
+  response.cookie(COOKIE_NAMES.accessToken, accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 30 * 1000, // 1 hour
+    signed: true,
+  });
+
+  response.cookie(COOKIE_NAMES.refreshToken, refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days
+    signed: true,
+  });
+
+  return response.status(StatusCodes.OK).json({
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  });
 };
