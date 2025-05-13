@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import { getAccountData } from '@/data/accounts/get-account';
+import { revokeSessionData } from '@/data/sessions/revoke-session';
 import { type DbClient } from '@/db/create-db-client';
 import { envConfig } from '@/env';
 import { compareTextToHashedText } from '@/lib/bcrypt';
@@ -8,6 +9,7 @@ import { BadRequestError } from '@/utils/errors';
 
 export type LoginAuthServiceDependencies = {
   getAccountData: typeof getAccountData;
+  revokeSessionData: typeof revokeSessionData;
   compareTextToHashedText: typeof compareTextToHashedText;
 };
 
@@ -25,6 +27,7 @@ export async function loginAuthService({
   payload,
   dependencies = {
     getAccountData,
+    revokeSessionData,
     compareTextToHashedText,
   },
 }: LoginAuthServiceArgs) {
@@ -43,7 +46,7 @@ export async function loginAuthService({
 
     if (!isPasswordCorrect) throw new BadRequestError('Invalid credentials.');
 
-    await dbClientTrx.deleteFrom('sessions').where('account_id', '=', existingAccount.id).execute();
+    await dependencies.revokeSessionData({ dbClient: dbClientTrx, accountId: existingAccount.id });
 
     const newRefreshToken = jwt.sign(
       {
