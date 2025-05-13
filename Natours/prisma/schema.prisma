@@ -29,10 +29,11 @@ model accounts {
 }
 
 model sessions {
-  id         Int       @id @default(autoincrement())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
-  deleted_at DateTime?
+  id            Int       @id @default(autoincrement())
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @default(now())
+  deleted_at    DateTime?
+  refresh_token String
 
   // Foreign Keys
   account_id Int?

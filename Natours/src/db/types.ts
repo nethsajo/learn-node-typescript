@@ -19,6 +19,14 @@ export type locations = {
     deleted_at: Timestamp | null;
     name: string | null;
 };
+export type sessions = {
+    id: Generated<number>;
+    created_at: Generated<Timestamp>;
+    updated_at: Generated<Timestamp>;
+    deleted_at: Timestamp | null;
+    refresh_token: string;
+    account_id: number | null;
+};
 export type users = {
     id: Generated<number>;
     created_at: Generated<Timestamp>;
@@ -31,5 +39,6 @@ export type users = {
 export type DB = {
     accounts: accounts;
     locations: locations;
+    sessions: sessions;
     users: users;
 };
