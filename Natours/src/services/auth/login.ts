@@ -1,16 +1,19 @@
-import jwt from 'jsonwebtoken';
-
 import { getAccountData } from '@/data/accounts/get-account';
+import { createSessionData } from '@/data/sessions/create-session';
 import { revokeSessionData } from '@/data/sessions/revoke-session';
 import { type DbClient } from '@/db/create-db-client';
 import { envConfig } from '@/env';
 import { compareTextToHashedText } from '@/lib/bcrypt';
+import { generateJWT } from '@/lib/jwt';
+import { type AccessTokenJWTPayload, type RefreshTokenJWTPayload } from '@/types/auth';
 import { BadRequestError } from '@/utils/errors';
 
 export type LoginAuthServiceDependencies = {
   getAccountData: typeof getAccountData;
-  revokeSessionData: typeof revokeSessionData;
   compareTextToHashedText: typeof compareTextToHashedText;
+  revokeSessionData: typeof revokeSessionData;
+  generateJWT: typeof generateJWT;
+  createSessionData: typeof createSessionData;
 };
 
 export type LoginAuthServiceArgs = {
@@ -27,8 +30,10 @@ export async function loginAuthService({
   payload,
   dependencies = {
     getAccountData,
-    revokeSessionData,
     compareTextToHashedText,
+    revokeSessionData,
+    generateJWT,
+    createSessionData,
   },
 }: LoginAuthServiceArgs) {
   return await dbClient.transaction().execute(async dbClientTrx => {
@@ -48,32 +53,34 @@ export async function loginAuthService({
 
     await dependencies.revokeSessionData({ dbClient: dbClientTrx, accountId: existingAccount.id });
 
-    const newRefreshToken = jwt.sign(
-      {
-        id: existingAccount.id,
-        email: existingAccount.email,
+    const newRefreshToken = dependencies.generateJWT<RefreshTokenJWTPayload>({
+      payload: {
+        accountId: existingAccount.id,
+        sub: existingAccount.id,
         iss: 'login',
-        aud: 'bossneth.app',
+        aud: 'frontend',
       },
-      envConfig.JWT_REFRESH_TOKEN_SECRET,
-      { expiresIn: '1d' }
-    );
+      secretOrPrivateKey: envConfig.JWT_REFRESH_TOKEN_SECRET,
+      signOptions: { expiresIn: '1d' },
+    });
 
-    await dbClientTrx
-      .insertInto('sessions')
-      .values({ refresh_token: newRefreshToken, account_id: existingAccount.id })
-      .execute();
+    const createdSession = await dependencies.createSessionData({
+      dbClient: dbClientTrx,
+      values: { refresh_token: newRefreshToken, account_id: existingAccount.id },
+    });
 
-    const newAccessToken = jwt.sign(
-      {
-        id: existingAccount.id,
+    const newAccessToken = dependencies.generateJWT<AccessTokenJWTPayload>({
+      payload: {
         email: existingAccount.email,
+        accountId: existingAccount.id,
+        sessionId: createdSession.id,
+        sub: existingAccount.id,
         iss: 'login',
-        aud: 'bossneth.app',
+        aud: 'frontend',
       },
-      envConfig.JWT_ACCESS_TOKEN_SECRET,
-      { expiresIn: '10s' }
-    );
+      secretOrPrivateKey: envConfig.JWT_ACCESS_TOKEN_SECRET,
+      signOptions: { expiresIn: '10s' },
+    });
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   });
