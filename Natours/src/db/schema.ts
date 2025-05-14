@@ -1,6 +1,9 @@
-import { type accounts, type DB, type locations, type users } from './types';
+import { type accounts, type DB, type locations, type sessions, type users } from './types';
 
-type OverrideCommonFields<Model> = Omit<Model, 'id' | 'created_at' | 'updated_at' | 'deleted_at'> & {
+type OverrideCommonFields<Schema> = Omit<
+  Schema,
+  'id' | 'created_at' | 'updated_at' | 'deleted_at'
+> & {
   id: number;
   created_at: Date | string;
   updated_at: Date | string;
@@ -9,6 +12,7 @@ type OverrideCommonFields<Model> = Omit<Model, 'id' | 'created_at' | 'updated_at
 
 export type Account = OverrideCommonFields<accounts>;
 export type User = OverrideCommonFields<users>;
+export type Session = OverrideCommonFields<sessions>;
 export type Location = OverrideCommonFields<locations>;
 
 export type KyselySchema = DB;
