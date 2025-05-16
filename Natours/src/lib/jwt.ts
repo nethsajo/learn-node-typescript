@@ -21,3 +21,11 @@ export function generateJWT<TPayload extends Record<string, unknown>>({
 }: GenerateJWTArgs<TPayload>) {
   return jwt.sign(payload, secretOrPrivateKey, signOptions);
 }
+
+export type DecodeJWTArgs = {
+  token: string;
+};
+
+export function decodeJWT<TPayload extends Record<string, unknown>>({ token }: DecodeJWTArgs) {
+  return jwt.decode(token) as JWTPayload<TPayload> | null;
+}
