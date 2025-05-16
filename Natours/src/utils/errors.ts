@@ -9,6 +9,14 @@ export class BadRequestError extends Error {
   }
 }
 
+export class UnauthorizedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UnauthorizedError';
+    this.message = message;
+  }
+}
+
 export class NotFoundError extends Error {
   constructor(message: string) {
     super(message);
@@ -34,6 +42,13 @@ export function makeError<TError extends Error>(error: TError) {
   if (error instanceof BadRequestError) {
     return {
       statusCode: StatusCodes.BAD_REQUEST,
+      error: defaultError,
+    };
+  }
+
+  if (error instanceof UnauthorizedError) {
+    return {
+      statusCode: StatusCodes.UNAUTHORIZED,
       error: defaultError,
     };
   }
