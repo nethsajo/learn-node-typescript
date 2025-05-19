@@ -22,6 +22,18 @@ export function generateJWT<TPayload extends Record<string, unknown>>({
   return jwt.sign(payload, secretOrPrivateKey, signOptions);
 }
 
+export type VerifyJWTArgs = {
+  token: string;
+  secretOrPrivateKey: string;
+};
+
+export function verifyJWT<TPayload extends Record<string, unknown>>({
+  token,
+  secretOrPrivateKey,
+}: VerifyJWTArgs) {
+  return jwt.verify(token, secretOrPrivateKey) as JWTPayload<TPayload> | null;
+}
+
 export type DecodeJWTArgs = {
   token: string;
 };

@@ -1,16 +1,18 @@
 import { type NextFunction, type Request, type Response } from 'express';
 
 import { COOKIE_NAMES } from '@/constants/cookies';
-import { decodeJWT } from '@/lib/jwt';
-import { type AccessTokenJWTPayload } from '@/types/auth';
-import { UnauthorizedError } from '@/utils/errors';
+import { envConfig } from '@/env';
+import { decodeJWT, verifyJWT } from '@/lib/jwt';
+import { refreshSessionAuthService } from '@/services/auth/refresh-session';
+import { type AccessTokenJWTPayload, type Session } from '@/types/auth';
+import { makeError, UnauthorizedError } from '@/utils/errors';
 
 export async function authenticationMiddleware(
   request: Request,
   response: Response,
   next: NextFunction
 ) {
-  // const dbClient = request.dbClient;
+  const dbClient = request.dbClient;
 
   const storedAccessToken = request.signedCookies[COOKIE_NAMES.accessToken];
   const storedRefreshToken = request.signedCookies[COOKIE_NAMES.refreshToken];
@@ -27,6 +29,38 @@ export async function authenticationMiddleware(
 
   if (!storedAccessTokenPayload) {
     throw new UnauthorizedError('Session tokens are invalid');
+  }
+
+  async function refreshSession({
+    session,
+    refreshToken,
+  }: {
+    session: Session;
+    refreshToken: string;
+  }) {
+    const {} = refreshSessionAuthService({ dbClient, payload: { session, refreshToken } });
+  }
+
+  try {
+    verifyJWT<AccessTokenJWTPayload>({
+      token: storedAccessToken,
+      secretOrPrivateKey: envConfig.JWT_ACCESS_TOKEN_SECRET,
+    });
+
+    request.session = {
+      email: storedAccessTokenPayload.email,
+      accountId: storedAccessTokenPayload.accountId,
+      sessionId: storedAccessTokenPayload.sessionId,
+      accessToken: storedAccessToken,
+      refreshToken: storedRefreshToken,
+    };
+  } catch (err) {
+    const error = makeError(err as Error);
+
+    if (error.error.message === 'Token expired') {
+    } else {
+      throw new UnauthorizedError('Session tokens are invalid');
+    }
   }
 
   next();
