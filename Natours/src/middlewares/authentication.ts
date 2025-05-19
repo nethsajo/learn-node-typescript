@@ -3,6 +3,7 @@ import { type NextFunction, type Request, type Response } from 'express';
 import { COOKIE_NAMES } from '@/constants/cookies';
 import { envConfig } from '@/env';
 import { decodeJWT, verifyJWT } from '@/lib/jwt';
+import { refreshSessionAuthService } from '@/services/auth/refresh-session';
 import { type AccessTokenJWTPayload, type Session } from '@/types/auth';
 import { makeError, UnauthorizedError } from '@/utils/errors';
 
@@ -11,7 +12,7 @@ export async function authenticationMiddleware(
   response: Response,
   next: NextFunction
 ) {
-  // const dbClient = request.dbClient;
+  const dbClient = request.dbClient;
 
   const storedAccessToken = request.signedCookies[COOKIE_NAMES.accessToken];
   const storedRefreshToken = request.signedCookies[COOKIE_NAMES.refreshToken];
@@ -36,7 +37,9 @@ export async function authenticationMiddleware(
   }: {
     session: Session;
     refreshToken: string;
-  }) {}
+  }) {
+    const {} = refreshSessionAuthService({ dbClient, payload: { session, refreshToken } });
+  }
 
   try {
     verifyJWT<AccessTokenJWTPayload>({
@@ -50,20 +53,11 @@ export async function authenticationMiddleware(
       sessionId: storedAccessTokenPayload.sessionId,
       accessToken: storedAccessToken,
       refreshToken: storedRefreshToken,
-    } satisfies Session;
+    };
   } catch (err) {
     const error = makeError(err as Error);
+
     if (error.error.message === 'Token expired') {
-      await refreshSession({
-        session: {
-          email: storedAccessTokenPayload.email,
-          accountId: storedAccessTokenPayload.accountId,
-          sessionId: storedAccessTokenPayload.sessionId,
-          accessToken: storedAccessToken,
-          refreshToken: storedRefreshToken,
-        },
-        refreshToken: storedRefreshToken,
-      });
     } else {
       throw new UnauthorizedError('Session tokens are invalid');
     }
