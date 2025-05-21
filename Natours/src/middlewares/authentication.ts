@@ -53,11 +53,21 @@ export async function authenticationMiddleware(
       sessionId: storedAccessTokenPayload.sessionId,
       accessToken: storedAccessToken,
       refreshToken: storedRefreshToken,
-    };
+    } satisfies Session;
   } catch (err) {
     const error = makeError(err as Error);
 
     if (error.error.message === 'Token expired') {
+      await refreshSession({
+        session: {
+          email: storedAccessTokenPayload.email,
+          accountId: storedAccessTokenPayload.accountId,
+          sessionId: storedAccessTokenPayload.sessionId,
+          accessToken: storedAccessToken,
+          refreshToken: storedRefreshToken,
+        },
+        refreshToken: storedRefreshToken,
+      });
     } else {
       throw new UnauthorizedError('Session tokens are invalid');
     }
