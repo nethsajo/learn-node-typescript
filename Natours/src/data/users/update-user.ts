@@ -8,21 +8,21 @@ import type { UpdateUser } from './schema';
 
 export type UpdateUserDataArgs = {
   dbClient: DbClient;
-  id: User['id'];
+  accountId: User['id'];
   values: UpdateUser;
 };
 
-export async function updateUserData({ dbClient, id, values }: UpdateUserDataArgs) {
+export async function updateUserData({ dbClient, accountId, values }: UpdateUserDataArgs) {
   await dbClient
     .updateTable('users')
     .set({ ...values, updated_at: sql`NOW()` })
-    .where('id', '=', id)
+    .where('account_id', '=', accountId)
     .execute();
 
   const updatedRecord = await dbClient
     .selectFrom('users')
     .selectAll()
-    .where('id', '=', id)
+    .where('account_id', '=', accountId)
     .executeTakeFirstOrThrow(() => new NotFoundError('User not found'));
 
   return updatedRecord;

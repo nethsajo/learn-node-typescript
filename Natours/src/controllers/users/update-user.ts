@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
 import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
-import { updateUserData } from '@/data/users/update-user';
 import { registry } from '@/lib/openapi';
+import { updateUserService } from '@/services/user/update-user';
 
 export const updateUserSchema = {
   params: z.object({
@@ -53,7 +53,10 @@ export const updateUserRouteHandler: RequestHandler = async (request, response) 
   const id = Number(request.params.id);
   const body = updateUserSchema.body.parse(request.body);
 
-  const updatedUser = await updateUserData({ dbClient, id, values: body });
+  const updatedUser = await updateUserService({
+    dbClient,
+    payload: { accountId: id, values: body },
+  });
 
   return response.status(StatusCodes.OK).json({ updatedUser });
 };

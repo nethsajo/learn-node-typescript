@@ -22,6 +22,7 @@ export const userSchemaObject = {
   last_name: z.string().nullable().openapi({
     example: 'Sajo',
   }),
+  account_id: z.number(),
 };
 
 export const userSchema = z.object(userSchemaObject) satisfies z.ZodType<User>;
