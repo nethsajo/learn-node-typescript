@@ -1,5 +1,5 @@
 import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { type OpenAPIDefinitions } from '@asteasolutions/zod-to-openapi/dist/openapi-registry';
+import type { OpenAPIDefinitions } from '@asteasolutions/zod-to-openapi/dist/openapi-registry';
 
 import { envConfig } from '@/env';
 

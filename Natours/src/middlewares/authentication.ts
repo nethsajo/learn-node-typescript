@@ -1,10 +1,10 @@
-import { type NextFunction, type Request, type Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 import { COOKIE_NAMES } from '@/constants/cookies';
 import { envConfig } from '@/env';
 import { decodeJWT, verifyJWT } from '@/lib/jwt';
 import { refreshSessionAuthService } from '@/services/auth/refresh-session';
-import { type AccessTokenJWTPayload, type Session } from '@/types/auth';
+import type { AccessTokenJWTPayload, Session } from '@/types/auth';
 import { makeError, UnauthorizedError } from '@/utils/errors';
 
 export async function authenticationMiddleware(

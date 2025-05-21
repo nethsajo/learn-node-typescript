@@ -1,8 +1,8 @@
 import { getSessionData } from '@/data/sessions/get-session';
-import { type DbClient } from '@/db/create-db-client';
+import type { DbClient } from '@/db/create-db-client';
 import { envConfig } from '@/env';
 import { decodeJWT, verifyJWT } from '@/lib/jwt';
-import { type RefreshTokenJWTPayload, type Session } from '@/types/auth';
+import type { RefreshTokenJWTPayload, Session } from '@/types/auth';
 import { UnauthorizedError } from '@/utils/errors';
 
 export type RefreshSessionAuthServiceDependencies = {

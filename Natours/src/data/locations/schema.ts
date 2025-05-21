@@ -1,7 +1,7 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 
-import { type Location } from '@/db/schema';
+import type { Location } from '@/db/schema';
 
 extendZodWithOpenApi(z);
 

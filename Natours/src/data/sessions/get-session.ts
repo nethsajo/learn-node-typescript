@@ -1,5 +1,5 @@
-import { type DbClient } from '@/db/create-db-client';
-import { type Account } from '@/db/schema';
+import type { DbClient } from '@/db/create-db-client';
+import type { Account } from '@/db/schema';
 import { BadRequestError, NotFoundError } from '@/utils/errors';
 
 export type GetSessionDataArgs = {

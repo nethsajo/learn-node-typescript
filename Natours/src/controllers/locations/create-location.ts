@@ -1,6 +1,6 @@
-import { type RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { type z } from 'zod';
+import type { z } from 'zod';
 
 import { createLocationData } from '@/data/locations/create-location';
 import { locationSchema } from '@/data/locations/schema';

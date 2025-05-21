@@ -1,4 +1,4 @@
-import { type accounts, type DB, type locations, type sessions, type users } from './types';
+import type { accounts, DB, locations, sessions, users } from './types';
 
 type OverrideCommonFields<Schema> = Omit<
   Schema,

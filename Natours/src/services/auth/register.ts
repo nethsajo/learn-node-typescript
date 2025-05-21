@@ -1,6 +1,6 @@
 import { createAccountData } from '@/data/accounts/create-account';
 import { getAccountData } from '@/data/accounts/get-account';
-import { type DbClient } from '@/db/create-db-client';
+import type { DbClient } from '@/db/create-db-client';
 import { hashText } from '@/lib/bcrypt';
 import { BadRequestError } from '@/utils/errors';
 

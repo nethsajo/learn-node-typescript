@@ -1,6 +1,6 @@
-import { type DbClient } from '@/db/create-db-client';
+import type { DbClient } from '@/db/create-db-client';
 
-import { type CreateLocation } from './schema';
+import type { CreateLocation } from './schema';
 
 export type CreateLocationDataArgs = {
   dbClient: DbClient;

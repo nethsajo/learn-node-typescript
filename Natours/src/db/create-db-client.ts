@@ -3,7 +3,7 @@ import mysql2 from 'mysql2';
 
 import { envConfig } from '@/env';
 
-import { type KyselySchema } from './schema';
+import type { KyselySchema } from './schema';
 
 export function createDbClient() {
   const dbClient = new Kysely<KyselySchema>({

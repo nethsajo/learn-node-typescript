@@ -1,4 +1,4 @@
-import { type RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 

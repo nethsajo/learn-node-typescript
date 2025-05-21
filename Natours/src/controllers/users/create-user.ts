@@ -1,6 +1,6 @@
-import { type RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { type z } from 'zod';
+import type { z } from 'zod';
 
 import { createUserData } from '@/data/users/create-user';
 import { userSchema, userSchemaOpenApi } from '@/data/users/schema';
