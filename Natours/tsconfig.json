@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true,
 
     /* Paths */
     "baseUrl": ".",
