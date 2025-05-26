@@ -25,12 +25,6 @@ export async function authenticationMiddleware(
     throw new UnauthorizedError('Session tokens are invalid');
   }
 
-  const storedAccessTokenPayload = decodeJWT<AccessTokenJWTPayload>({ token: storedAccessToken });
-
-  if (!storedAccessTokenPayload) {
-    throw new UnauthorizedError('Session tokens are invalid');
-  }
-
   async function refreshSession({
     session,
     refreshToken,
@@ -73,6 +67,12 @@ export async function authenticationMiddleware(
       maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days
       signed: true,
     });
+  }
+
+  const storedAccessTokenPayload = decodeJWT<AccessTokenJWTPayload>({ token: storedAccessToken });
+
+  if (!storedAccessTokenPayload) {
+    throw new UnauthorizedError('Session tokens are invalid');
   }
 
   try {
