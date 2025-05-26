@@ -3,8 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import type { z } from 'zod';
 
 import { createLocationData } from '@/data/locations/create-location';
-import { locationSchema } from '@/data/locations/schema';
-import { userSchemaOpenApi } from '@/data/users/schema';
+import { locationSchema, locationSchemaOpenApi } from '@/data/locations/schema';
 import { registry } from '@/lib/openapi';
 import { NotFoundError } from '@/utils/errors';
 
@@ -12,7 +11,7 @@ export const createLocationSchema = {
   body: locationSchema.pick({
     name: true,
   }),
-  response: userSchemaOpenApi,
+  response: locationSchemaOpenApi,
 };
 
 export type CreateLocationBody = z.infer<typeof createLocationSchema.body>;
@@ -40,7 +39,7 @@ export const createUserRoute = registry.registerPath({
           schema: createLocationSchema.response,
         },
       },
-      description: 'Users created successfully',
+      description: 'Location created successfully',
     },
   },
 });
