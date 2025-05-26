@@ -1,11 +1,11 @@
-import type { getAccountData } from '@/data/accounts/get-account';
+import { getAccountData } from '@/data/accounts/get-account';
 import { getSessionData } from '@/data/sessions/get-session';
 import { updateSessionData } from '@/data/sessions/update-session';
 import type { DbClient } from '@/db/create-db-client';
 import { envConfig } from '@/env';
 import { decodeJWT, generateJWT, verifyJWT } from '@/lib/jwt';
 import type { AccessTokenJWTPayload, RefreshTokenJWTPayload, Session } from '@/types/auth';
-import { UnauthorizedError } from '@/utils/errors';
+import { BadRequestError, UnauthorizedError } from '@/utils/errors';
 
 export type RefreshSessionAuthServiceDependencies = {
   decodeJWT: typeof decodeJWT;
@@ -87,12 +87,14 @@ export async function refreshSessionAuthService({
       id: refreshTokenPayload.accountId,
     });
 
+    if (!account) throw new BadRequestError('Account does not exist.');
+
     const newAccessToken = dependencies.generateJWT<AccessTokenJWTPayload>({
       payload: {
-        email: account?.email,
-        accountId: account?.id,
+        email: account.email,
+        accountId: account.id,
         sessionId: updatedSession.id,
-        sub: account?.id,
+        sub: account.id,
         iss: 'refresh',
         aud: 'frontend',
       },
@@ -100,6 +102,11 @@ export async function refreshSessionAuthService({
       signOptions: { expiresIn: '10s' },
     });
 
-    return {};
+    return {
+      account,
+      sessionId: updatedSession.id,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
   });
 }

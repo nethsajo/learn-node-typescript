@@ -38,7 +38,41 @@ export async function authenticationMiddleware(
     session: Session;
     refreshToken: string;
   }) {
-    const {} = refreshSessionAuthService({ dbClient, payload: { session, refreshToken } });
+    const {
+      account,
+      sessionId,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    } = await refreshSessionAuthService({
+      dbClient,
+      payload: { session, refreshToken },
+    });
+
+    request.session = {
+      email: account.email,
+      accountId: account.id,
+      sessionId: sessionId,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    } satisfies Session;
+
+    response.cookie(COOKIE_NAMES.accessToken, newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 30 * 1000, // 30 secs
+      signed: true,
+    });
+
+    response.cookie(COOKIE_NAMES.refreshToken, newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days
+      signed: true,
+    });
   }
 
   try {
