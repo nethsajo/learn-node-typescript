@@ -49,7 +49,7 @@ export function makeError<TError extends Error>(error: TError) {
   if (error.message.includes('jwt expired')) {
     return {
       statusCode: StatusCodes.UNAUTHORIZED,
-      error: { name: 'UnauthorizedError', message: 'Token expired.' },
+      error: { name: 'UnauthorizedError', message: 'Token expired' },
     };
   }
 
