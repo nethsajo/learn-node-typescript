@@ -19,7 +19,7 @@ export type CreateLocationResponse = z.infer<typeof createLocationSchema.respons
 
 export const createUserRoute = registry.registerPath({
   method: 'post',
-  path: '/api/v1/locations',
+  path: '/locations',
   tags: ['Locations'],
   summary: 'Create a location',
   description: 'Create a new location',

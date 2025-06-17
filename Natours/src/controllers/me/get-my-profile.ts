@@ -15,7 +15,7 @@ export type GetMyProfileResponse = z.infer<typeof getMyProfileSchema.response>;
 export const getMyProfileRoute = registry.registerPath({
   security: [{ bearerAuth: [] }],
   method: 'get',
-  path: '/api/v1/me',
+  path: '/me',
   tags: ['Me'],
   summary: 'Retrieve my profile',
   description: 'Retrieve your profile',

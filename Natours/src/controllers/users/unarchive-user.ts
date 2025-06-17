@@ -19,7 +19,7 @@ export type UnarchiveUserResponse = z.infer<typeof unarchiveUserSchema.response>
 export const unarchiveUserRoute = registry.registerPath({
   security: [{ bearerAuth: [] }],
   method: 'put',
-  path: '/api/v1/users/{id}/unarchive',
+  path: '/users/{id}/unarchive',
   tags: ['Users'],
   summary: 'Unarchive a user',
   description: 'Unarchive a user',

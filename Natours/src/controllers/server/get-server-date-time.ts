@@ -14,7 +14,7 @@ export type GetServerDateTimeResponse = z.infer<typeof getServerDateTimeSchema.r
 export const getServerDateTimeRoute = registry.registerPath({
   security: [{ bearerAuth: [] }],
   method: 'get',
-  path: '/api/v1/server/date-time',
+  path: '/server/date-time',
   tags: ['Server'],
   summary: 'Retrieve the server date time',
   description: 'Retrieve the server date time',

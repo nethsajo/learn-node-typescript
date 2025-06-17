@@ -50,7 +50,7 @@ app.use(cookieParser(envConfig.COOKIE_SECRET));
 
 /* Routes */
 routes.forEach(route => {
-  app.use('/api/v1', route);
+  app.use('/', route);
 });
 
 /* Error handling middleware */

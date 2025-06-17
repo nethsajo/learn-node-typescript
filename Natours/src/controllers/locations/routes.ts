@@ -5,7 +5,7 @@ import { authenticationMiddleware } from '@/middlewares/authentication';
 
 const locationsRoutes: Router = express.Router();
 
-locationsRoutes.use(authenticationMiddleware);
+locationsRoutes.use('/locations', authenticationMiddleware);
 
 locationsRoutes.post('/locations', createLocationRouteHandler);
 

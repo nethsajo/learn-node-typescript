@@ -1,10 +1,11 @@
-import { authenticationMiddleware } from '@/middlewares/authentication';
 import express, { type Router } from 'express';
+
 import { getMyProfileRouteHandler } from './get-my-profile';
+import { authenticationMiddleware } from '@/middlewares/authentication';
 
 const meRoutes: Router = express.Router();
 
-meRoutes.use(authenticationMiddleware);
+meRoutes.use('/me', authenticationMiddleware);
 
 meRoutes.get('/me', getMyProfileRouteHandler);
 

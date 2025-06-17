@@ -19,7 +19,7 @@ export type DeleteUserResponse = z.infer<typeof deleteUserSchema.response>;
 export const deleteUserRoute = registry.registerPath({
   security: [{ bearerAuth: [] }],
   method: 'delete',
-  path: '/api/v1/users/{id}',
+  path: '/users/{id}',
   tags: ['Users'],
   summary: 'Delete a user',
   description: 'Delete a user',

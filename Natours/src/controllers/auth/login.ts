@@ -21,7 +21,7 @@ export type LoginAuthResponse = z.infer<typeof loginAuthSchema.response>;
 export const loginAuthRoute = registry.registerPath({
   security: [{ bearerAuth: [] }],
   method: 'post',
-  path: '/api/v1/auth/login',
+  path: '/auth/login',
   tags: ['Auth'],
   summary: 'Login to account',
   description: 'Login to your account',

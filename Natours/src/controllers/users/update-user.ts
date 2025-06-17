@@ -22,7 +22,7 @@ export const updateUserSchema = {
 export const updateUserRoute = registry.registerPath({
   security: [{ bearerAuth: [] }],
   method: 'put',
-  path: '/api/v1/users/{id}',
+  path: '/users/{id}',
   tags: ['Users'],
   summary: 'Update a user',
   description: 'Update the details of a user',

@@ -19,7 +19,7 @@ export type ArchiveUserResponse = z.infer<typeof archiveUserSchema.response>;
 export const archiveUserRoute = registry.registerPath({
   security: [{ bearerAuth: [] }],
   method: 'put',
-  path: '/api/v1/users/{id}/archive',
+  path: '/users/{id}/archive',
   tags: ['Users'],
   summary: 'Archive a user',
   description: 'Archive a user',
