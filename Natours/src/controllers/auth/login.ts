@@ -35,7 +35,7 @@ export const loginAuthRoute = registry.registerPath({
     },
   },
   responses: {
-    201: {
+    200: {
       content: {
         'application/json': {
           schema: loginAuthSchema.response,
