@@ -53,20 +53,20 @@ export const loginAuthRouteHandler: RequestHandler = async (request, response) =
   const { accessToken, refreshToken } = await loginAuthService({ dbClient, payload: body });
 
   response.cookie(COOKIE_NAMES.accessToken, accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/',
-    maxAge: 30 * 1000, // 1 hour
+    httpOnly: true, // Prevents JavaScript access
+    secure: process.env.NODE_ENV === 'production', // Only sent over HTTPS
+    sameSite: 'strict', // Prevents cross-site request forgery
+    path: '/', // Available across the entire site
+    maxAge: 30 * 1000, // currently set to 30s but the ideal is 60 * 60 * 24 * 1 (1 day [in seconds])
     signed: true,
   });
 
   response.cookie(COOKIE_NAMES.refreshToken, refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days
+    httpOnly: true, // Prevents JavaScript access
+    secure: process.env.NODE_ENV === 'production', // Only sent over HTTPS
+    sameSite: 'strict', // Prevents cross-site request forgery
+    path: '/', // Available across the entire site
+    maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days (in seconds)
     signed: true,
   });
 

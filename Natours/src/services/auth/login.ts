@@ -61,7 +61,7 @@ export async function loginAuthService({
         aud: 'frontend',
       },
       secretOrPrivateKey: envConfig.JWT_REFRESH_TOKEN_SECRET,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '1d' }, // ideal duration is 7d to 30d
     });
 
     const createdSession = await dependencies.createSessionData({
@@ -79,7 +79,7 @@ export async function loginAuthService({
         aud: 'frontend',
       },
       secretOrPrivateKey: envConfig.JWT_ACCESS_TOKEN_SECRET,
-      signOptions: { expiresIn: '10s' },
+      signOptions: { expiresIn: '10s' }, // ideal duration is 5m to 15m
     });
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
