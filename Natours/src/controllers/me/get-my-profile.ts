@@ -33,11 +33,9 @@ export const getMyProfileRoute = registry.registerPath({
 
 export const getMyProfileRouteHandler: RequestHandler = async (request, response) => {
   const dbClient = request.dbClient;
-  const session = request.session;
+  const session = request.session as Session;
 
-  // const myProfile = await getUserData();
+  const myProfile = await getUserData({ dbClient, accountId: session.accountId });
 
-  console.log(dbClient, session);
-
-  return response.status(StatusCodes.OK).json(null);
+  return response.status(StatusCodes.OK).json(myProfile);
 };

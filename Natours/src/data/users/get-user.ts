@@ -4,13 +4,13 @@ import { NotFoundError } from '@/utils/errors';
 
 export type GetUserDataArgs = {
   dbClient: DbClient;
-  id: User['id'];
+  accountId: User['id'];
 };
 
-export async function getUserData({ dbClient, id }: GetUserDataArgs) {
+export async function getUserData({ dbClient, accountId }: GetUserDataArgs) {
   const record = await dbClient
     .selectFrom('users')
-    .where('id', '=', id)
+    .where('account_id', '=', accountId)
     .selectAll()
     .executeTakeFirstOrThrow(() => new NotFoundError('User not found.'));
 
