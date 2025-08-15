@@ -14,34 +14,57 @@ import { errorHandlerMiddleware } from '@/middlewares/error-handler';
 
 import { envConfig } from './env';
 import { setupDbClientMiddleware } from './middlewares/setup-db-client';
-import { logger } from './utils/logger';
+import { STAGES } from './constants/env';
+import { isNotProduction } from './middlewares/stage-guard';
 
 const app = express();
+
+app.get('/openapi.json', isNotProduction, (request, response) => {
+  const doc = generateOpenAPISpec(registry.definitions);
+  response.json(doc);
+});
+
+app.use('/swagger', isNotProduction, swaggerUi.serve);
+app.get(
+  '/swagger',
+  isNotProduction,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: '/openapi.json',
+    },
+    customCss: '.topbar { display: none; }',
+  })
+);
+
+app.use('/reference', isNotProduction, apiReference({ url: '/openapi.json' }));
 
 /* Register Schemas */
 Object.entries(schemas).forEach(([key, value]) => {
   registry.register(key, value);
 });
 
-app.get('/openapi.json', (request, response) => {
-  response.json(generateOpenAPISpec(registry.definitions));
+/* Middlewares */
+app.use((req, res, next) => {
+  const ALLOWED_ORIGINS = ['https://yourdomain.com', 'https://www.yourdomain.com'];
+
+  if (process.env.STAGE !== STAGES.Prod) {
+    ALLOWED_ORIGINS.push('http://localhost:3001');
+    ALLOWED_ORIGINS.push('http://localhost:5173');
+  }
+
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  })(req, res, next);
 });
 
-app.use(
-  '/swagger',
-  swaggerUi.serve,
-  swaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: '/openapi.json', // Load OpenAPI spec dynamically
-    },
-    customCss: '.topbar { display: none; }',
-  })
-);
-
-app.use('/reference', apiReference({ url: '/openapi.json' }));
-
-/* Middlewares */
-app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -56,7 +79,4 @@ routes.forEach(route => {
 /* Error handling middleware */
 app.use(errorHandlerMiddleware);
 
-/* Server */
-app.listen(envConfig.APP_PORT, () => {
-  logger.info('Listening on port', envConfig.APP_PORT);
-});
+export default app;

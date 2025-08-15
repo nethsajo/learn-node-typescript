@@ -17,6 +17,14 @@ export class UnauthorizedError extends Error {
   }
 }
 
+export class ForbiddenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ForbiddenError';
+    this.message = message;
+  }
+}
+
 export class NotFoundError extends Error {
   constructor(message: string) {
     super(message);
@@ -63,6 +71,13 @@ export function makeError<TError extends Error>(error: TError) {
   if (error instanceof UnauthorizedError) {
     return {
       statusCode: StatusCodes.UNAUTHORIZED,
+      error: defaultError,
+    };
+  }
+
+  if (error instanceof ForbiddenError) {
+    return {
+      statusCode: StatusCodes.FORBIDDEN,
       error: defaultError,
     };
   }
