@@ -10,22 +10,20 @@ export type GetSessionDataArgs = {
 
 export async function getSessionData({ dbClient, id, accountId }: GetSessionDataArgs) {
   if (!id && !accountId) {
-    throw new BadRequestError('Either id or accountId must be provided');
+    throw new BadRequestError('Either id or account id must be provided');
   }
 
-  const query = dbClient.selectFrom('sessions');
+  let query = dbClient.selectFrom('sessions');
 
   if (id) {
-    query.where('id', '=', id);
-  }
-
-  if (accountId) {
-    query.where('account_id', '=', accountId);
+    query = query.where('id', '=', id);
+  } else {
+    query = query.where('account_id', '=', accountId);
   }
 
   const record = await query
     .selectAll()
-    .executeTakeFirstOrThrow(() => new NotFoundError('Session not found.'));
+    .executeTakeFirstOrThrow(() => new NotFoundError('Session not found'));
 
   return record;
 }

@@ -5,6 +5,10 @@ import { z } from 'zod';
 import { registry } from '@/lib/openapi';
 import { registerAuthService } from '@/services/auth/register';
 import { emailSchema, passwordSchema } from '@/utils/zod-schemas';
+import { loginAuthService } from '@/services/auth/login';
+import { COOKIE_NAMES } from '@/constants/cookies';
+import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from '@/utils/cookie-options';
+import { envConfig } from '@/env';
 
 export const registerAuthSchema = {
   body: z.object({ email: emailSchema, password: passwordSchema }),
@@ -47,6 +51,20 @@ export const registerAuthRouteHandler: RequestHandler = async (request, response
   const body = registerAuthSchema.body.parse(request.body);
 
   await registerAuthService({ dbClient, payload: body });
+
+  const { accessToken, refreshToken } = await loginAuthService({ dbClient, payload: body });
+
+  response.cookie(
+    COOKIE_NAMES.accessToken,
+    accessToken,
+    getAccessTokenCookieOptions(envConfig.STAGE)
+  );
+
+  response.cookie(
+    COOKIE_NAMES.refreshToken,
+    refreshToken,
+    getRefreshTokenCookieOptions(envConfig.STAGE)
+  );
 
   return response.status(StatusCodes.CREATED).json('Account registered successfully');
 };

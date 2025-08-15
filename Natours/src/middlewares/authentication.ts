@@ -6,6 +6,7 @@ import { decodeJWT, verifyJWT } from '@/lib/jwt';
 import { refreshSessionAuthService } from '@/services/auth/refresh-session';
 import type { AccessTokenJWTPayload, Session } from '@/types/auth';
 import { makeError, UnauthorizedError } from '@/utils/errors';
+import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from '@/utils/cookie-options';
 
 export async function authenticationMiddleware(
   request: Request,
@@ -50,23 +51,9 @@ export async function authenticationMiddleware(
       refreshToken: newRefreshToken,
     } satisfies Session;
 
-    response.cookie(COOKIE_NAMES.accessToken, newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 30 * 1000, // 30 secs
-      signed: true,
-    });
+    response.cookie(COOKIE_NAMES.accessToken, newAccessToken, getAccessTokenCookieOptions(envConfig.STAGE));
 
-    response.cookie(COOKIE_NAMES.refreshToken, newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days
-      signed: true,
-    });
+    response.cookie(COOKIE_NAMES.refreshToken, newRefreshToken, getRefreshTokenCookieOptions(envConfig.STAGE));
   }
 
   const storedAccessTokenPayload = decodeJWT<AccessTokenJWTPayload>({ token: storedAccessToken });
@@ -91,7 +78,7 @@ export async function authenticationMiddleware(
   } catch (err) {
     const error = makeError(err as Error);
 
-    if (error.error.message === 'Token expired') {
+    if (error.error.message.toLowerCase().includes('token expired')) {
       await refreshSession({
         session: {
           email: storedAccessTokenPayload.email,

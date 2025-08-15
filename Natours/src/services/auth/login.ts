@@ -49,7 +49,7 @@ export async function loginAuthService({
       hashedText: existingAccount.password,
     });
 
-    if (!isPasswordCorrect) throw new BadRequestError('Invalid credentials.');
+    if (!isPasswordCorrect) throw new BadRequestError('Invalid credentials');
 
     await dependencies.revokeSessionData({ dbClient: dbClientTrx, accountId: existingAccount.id });
 
@@ -61,7 +61,7 @@ export async function loginAuthService({
         aud: 'frontend',
       },
       secretOrPrivateKey: envConfig.JWT_REFRESH_TOKEN_SECRET,
-      signOptions: { expiresIn: '1d' }, // ideal duration is 7d to 30d
+      signOptions: { expiresIn: '30d' }, // ideal lifetime is 7d to 30d
     });
 
     const createdSession = await dependencies.createSessionData({
@@ -79,7 +79,7 @@ export async function loginAuthService({
         aud: 'frontend',
       },
       secretOrPrivateKey: envConfig.JWT_ACCESS_TOKEN_SECRET,
-      signOptions: { expiresIn: '10s' }, // ideal duration is 5m to 15m
+      signOptions: { expiresIn: '30s' }, // ideal lifetime is 5m to 15m
     });
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };

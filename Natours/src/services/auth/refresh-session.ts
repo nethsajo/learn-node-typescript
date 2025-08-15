@@ -72,7 +72,7 @@ export async function refreshSessionAuthService({
         aud: 'frontend',
       },
       secretOrPrivateKey: envConfig.JWT_REFRESH_TOKEN_SECRET,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '30d' },
     });
 
     // Update the session
@@ -99,7 +99,7 @@ export async function refreshSessionAuthService({
         aud: 'frontend',
       },
       secretOrPrivateKey: envConfig.JWT_ACCESS_TOKEN_SECRET,
-      signOptions: { expiresIn: '10s' },
+      signOptions: { expiresIn: '30s' },
     });
 
     return {

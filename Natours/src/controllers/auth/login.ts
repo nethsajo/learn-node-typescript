@@ -5,10 +5,14 @@ import { z } from 'zod';
 import { COOKIE_NAMES } from '@/constants/cookies';
 import { registry } from '@/lib/openapi';
 import { loginAuthService } from '@/services/auth/login';
-import { emailSchema, passwordSchema } from '@/utils/zod-schemas';
+import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from '@/utils/cookie-options';
+import { envConfig } from '@/env';
 
 export const loginAuthSchema = {
-  body: z.object({ email: emailSchema, password: passwordSchema }),
+  body: z.object({
+    email: z.string().min(8, 'Invalid credentials').email('Invalid credentials'),
+    password: z.string().min(8, 'Invalid credentials'),
+  }),
   response: z.object({
     access_token: z.string(),
     refresh_token: z.string(),
@@ -52,23 +56,17 @@ export const loginAuthRouteHandler: RequestHandler = async (request, response) =
 
   const { accessToken, refreshToken } = await loginAuthService({ dbClient, payload: body });
 
-  response.cookie(COOKIE_NAMES.accessToken, accessToken, {
-    httpOnly: true, // Prevents JavaScript access
-    secure: process.env.NODE_ENV === 'production', // Only sent over HTTPS
-    sameSite: 'strict', // Prevents cross-site request forgery
-    path: '/', // Available across the entire site
-    maxAge: 30 * 1000, // currently set to 30s but the ideal is 60 * 60 * 24 * 1 (1 day [in seconds])
-    signed: true,
-  });
+  response.cookie(
+    COOKIE_NAMES.accessToken,
+    accessToken,
+    getAccessTokenCookieOptions(envConfig.STAGE)
+  );
 
-  response.cookie(COOKIE_NAMES.refreshToken, refreshToken, {
-    httpOnly: true, // Prevents JavaScript access
-    secure: process.env.NODE_ENV === 'production', // Only sent over HTTPS
-    sameSite: 'strict', // Prevents cross-site request forgery
-    path: '/', // Available across the entire site
-    maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days (in seconds)
-    signed: true,
-  });
+  response.cookie(
+    COOKIE_NAMES.refreshToken,
+    refreshToken,
+    getRefreshTokenCookieOptions(envConfig.STAGE)
+  );
 
   return response.status(StatusCodes.OK).json({
     access_token: accessToken,
