@@ -14,7 +14,7 @@ export interface CookieOptions {
   sameSite: 'strict' | 'lax' | 'none';
   path: string;
   maxAge: number;
-  signed?: boolean;
+  signed: boolean;
 }
 
 export function getAccessTokenCookieOptions(stage: Stage): CookieOptions {
@@ -25,7 +25,7 @@ export function getAccessTokenCookieOptions(stage: Stage): CookieOptions {
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 1,
+    maxAge: 5 * 60 * 1000, // 1 day (in seconds)
     signed: true,
   };
 }
@@ -38,7 +38,7 @@ export function getRefreshTokenCookieOptions(stage: Stage): CookieOptions {
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days (in seconds)
     signed: true,
   };
 }

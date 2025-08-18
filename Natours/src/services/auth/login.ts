@@ -79,7 +79,7 @@ export async function loginAuthService({
         aud: 'frontend',
       },
       secretOrPrivateKey: envConfig.JWT_ACCESS_TOKEN_SECRET,
-      signOptions: { expiresIn: '30s' }, // ideal lifetime is 5m to 15m
+      signOptions: { expiresIn: '5m' }, // ideal lifetime is 5m to 15m
     });
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };

@@ -44,7 +44,7 @@ Object.entries(schemas).forEach(([key, value]) => {
 });
 
 /* Middlewares */
-app.use((req, res, next) => {
+app.use((request, response, next) => {
   const ALLOWED_ORIGINS = ['https://yourdomain.com', 'https://www.yourdomain.com'];
 
   if (process.env.STAGE !== STAGES.Prod) {
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  })(req, res, next);
+  })(request, response, next);
 });
 
 app.use(morgan('dev'));

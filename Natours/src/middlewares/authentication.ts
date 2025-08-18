@@ -19,7 +19,7 @@ export async function authenticationMiddleware(
   const storedRefreshToken = request.signedCookies[COOKIE_NAMES.refreshToken];
 
   if (!storedAccessToken || !storedRefreshToken) {
-    throw new UnauthorizedError('Session tokens are required');
+    throw new UnauthorizedError('Authentication required');
   }
 
   if (typeof storedAccessToken !== 'string' || typeof storedRefreshToken !== 'string') {
@@ -38,10 +38,7 @@ export async function authenticationMiddleware(
       sessionId,
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
-    } = await refreshSessionAuthService({
-      dbClient,
-      payload: { session, refreshToken },
-    });
+    } = await refreshSessionAuthService({ dbClient, payload: { session, refreshToken } });
 
     request.session = {
       email: account.email,
@@ -51,9 +48,17 @@ export async function authenticationMiddleware(
       refreshToken: newRefreshToken,
     } satisfies Session;
 
-    response.cookie(COOKIE_NAMES.accessToken, newAccessToken, getAccessTokenCookieOptions(envConfig.STAGE));
+    response.cookie(
+      COOKIE_NAMES.accessToken,
+      newAccessToken,
+      getAccessTokenCookieOptions(envConfig.STAGE)
+    );
 
-    response.cookie(COOKIE_NAMES.refreshToken, newRefreshToken, getRefreshTokenCookieOptions(envConfig.STAGE));
+    response.cookie(
+      COOKIE_NAMES.refreshToken,
+      newRefreshToken,
+      getRefreshTokenCookieOptions(envConfig.STAGE)
+    );
   }
 
   const storedAccessTokenPayload = decodeJWT<AccessTokenJWTPayload>({ token: storedAccessToken });
@@ -77,7 +82,6 @@ export async function authenticationMiddleware(
     } satisfies Session;
   } catch (err) {
     const error = makeError(err as Error);
-
     if (error.error.message.toLowerCase().includes('token expired')) {
       await refreshSession({
         session: {
