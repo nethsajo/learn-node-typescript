@@ -25,7 +25,7 @@ export function getAccessTokenCookieOptions(stage: Stage): CookieOptions {
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
-    maxAge: 5 * 60 * 1000, // 1 day (in seconds)
+    maxAge: 5 * 60 * 1000, // 5 minutes (in milliseconds)
     signed: true,
   };
 }
@@ -38,7 +38,7 @@ export function getRefreshTokenCookieOptions(stage: Stage): CookieOptions {
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days (in seconds)
+    maxAge: 60 * 60 * 24 * 30 * 1000, // 30 days (in milliseconds)
     signed: true,
   };
 }

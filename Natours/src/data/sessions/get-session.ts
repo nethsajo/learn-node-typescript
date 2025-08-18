@@ -1,11 +1,10 @@
 import type { DbClient } from '@/db/create-db-client';
-import type { Account } from '@/db/schema';
 import { BadRequestError, NotFoundError } from '@/utils/errors';
 
 export type GetSessionDataArgs = {
   dbClient: DbClient;
   id?: number;
-  accountId: Account['id'];
+  accountId?: number; // Make this optional
 };
 
 export async function getSessionData({ dbClient, id, accountId }: GetSessionDataArgs) {
@@ -17,7 +16,9 @@ export async function getSessionData({ dbClient, id, accountId }: GetSessionData
 
   if (id) {
     query = query.where('id', '=', id);
-  } else {
+  }
+
+  if (accountId) {
     query = query.where('account_id', '=', accountId);
   }
 

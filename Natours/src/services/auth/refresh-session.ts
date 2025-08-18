@@ -55,7 +55,7 @@ export async function refreshSessionAuthService({
     accountId: refreshTokenPayload.accountId,
   });
 
-	if (!currentSession) throw new UnauthorizedError('Session not found');
+  if (!currentSession) throw new UnauthorizedError('Session not found');
 
   if (refreshTokenPayload.accountId !== payload.session.accountId) {
     throw new UnauthorizedError('Refresh token does not match session.');
