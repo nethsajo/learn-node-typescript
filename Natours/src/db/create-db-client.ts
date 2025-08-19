@@ -4,6 +4,7 @@ import mysql2 from 'mysql2';
 import { envConfig } from '@/env';
 
 import type { KyselySchema } from './schema';
+import { logger } from '@/utils/logger';
 
 export function createDbClient() {
   const dbClient = new Kysely<KyselySchema>({
@@ -15,6 +16,8 @@ export function createDbClient() {
       }),
     }),
   });
+
+  logger.info('Database connection established');
 
   return dbClient;
 }

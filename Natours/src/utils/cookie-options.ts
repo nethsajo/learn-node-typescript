@@ -25,7 +25,7 @@ export function getAccessTokenCookieOptions(stage: Stage): CookieOptions {
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
-    maxAge: 5 * 60 * 1000, // 5 minutes (in milliseconds)
+    maxAge: 60 * 60 * 24 * 30 * 1000, // 15 minutes (in seconds)
     signed: true,
   };
 }

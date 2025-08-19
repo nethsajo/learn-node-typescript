@@ -13,90 +13,89 @@ export async function authenticationMiddleware(
   response: Response,
   next: NextFunction
 ) {
-  const dbClient = request.dbClient;
+  const accessToken = request.signedCookies[COOKIE_NAMES.accessToken];
+  const refreshToken = request.signedCookies[COOKIE_NAMES.refreshToken];
 
-  const storedAccessToken = request.signedCookies[COOKIE_NAMES.accessToken];
-  const storedRefreshToken = request.signedCookies[COOKIE_NAMES.refreshToken];
-
-  if (!storedAccessToken || !storedRefreshToken) {
+  if (!accessToken || !refreshToken) {
     throw new UnauthorizedError('Authentication required');
   }
 
-  if (typeof storedAccessToken !== 'string' || typeof storedRefreshToken !== 'string') {
-    throw new UnauthorizedError('Session tokens are invalid');
+  if (typeof accessToken !== 'string' || typeof refreshToken !== 'string') {
+    throw new UnauthorizedError('Invalid authentication tokens');
   }
 
-  async function refreshSession({
-    session,
-    refreshToken,
-  }: {
-    session: Session;
-    refreshToken: string;
-  }) {
-    const {
-      account,
-      sessionId,
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
-    } = await refreshSessionAuthService({ dbClient, payload: { session, refreshToken } });
+  const accessTokenPayload = decodeJWT<AccessTokenJWTPayload>({ token: accessToken });
 
-    request.session = {
-      email: account.email,
-      accountId: account.id,
-      sessionId: sessionId,
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
-    } satisfies Session;
-
-    response.cookie(
-      COOKIE_NAMES.accessToken,
-      newAccessToken,
-      getAccessTokenCookieOptions(envConfig.STAGE)
-    );
-
-    response.cookie(
-      COOKIE_NAMES.refreshToken,
-      newRefreshToken,
-      getRefreshTokenCookieOptions(envConfig.STAGE)
-    );
+  if (!accessTokenPayload) {
+    throw new UnauthorizedError('Invalid authentication token');
   }
 
-  const storedAccessTokenPayload = decodeJWT<AccessTokenJWTPayload>({ token: storedAccessToken });
-
-  if (!storedAccessTokenPayload) {
-    throw new UnauthorizedError('Session tokens are invalid');
-  }
+  const session: Session = {
+    email: accessTokenPayload.email,
+    accountId: accessTokenPayload.accountId,
+    sessionId: accessTokenPayload.sessionId,
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+  };
 
   try {
     verifyJWT<AccessTokenJWTPayload>({
-      token: storedAccessToken,
+      token: accessToken,
       secretOrPrivateKey: envConfig.JWT_ACCESS_TOKEN_SECRET,
     });
 
-    request.session = {
-      email: storedAccessTokenPayload.email,
-      accountId: storedAccessTokenPayload.accountId,
-      sessionId: storedAccessTokenPayload.sessionId,
-      accessToken: storedAccessToken,
-      refreshToken: storedRefreshToken,
-    } satisfies Session;
+    request.session = session;
   } catch (err) {
     const error = makeError(err as Error);
     if (error.error.message.toLowerCase().includes('token expired')) {
-      await refreshSession({
-        session: {
-          email: storedAccessTokenPayload.email,
-          accountId: storedAccessTokenPayload.accountId,
-          sessionId: storedAccessTokenPayload.sessionId,
-          accessToken: storedAccessToken,
-          refreshToken: storedRefreshToken,
-        },
-        refreshToken: storedRefreshToken,
-      });
+      await refreshUserSession({ request, response, session, refreshToken });
     } else {
-      throw new UnauthorizedError('Session tokens are invalid');
+      throw new UnauthorizedError('Invalid authentication token');
     }
   }
 
   next();
 }
+
+type RefreshUserSessionArgs = {
+  request: Request;
+  response: Response;
+  session: Session;
+  refreshToken: string;
+};
+
+const refreshUserSession = async ({
+  request,
+  response,
+  session,
+  refreshToken,
+}: RefreshUserSessionArgs): Promise<void> => {
+  const dbClient = request.dbClient;
+
+  const {
+    account,
+    sessionId,
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+  } = await refreshSessionAuthService({ dbClient, payload: { session, refreshToken } });
+
+  request.session = {
+    email: account.email,
+    accountId: account.id,
+    sessionId: sessionId,
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+  } satisfies Session;
+
+  response.cookie(
+    COOKIE_NAMES.accessToken,
+    newAccessToken,
+    getAccessTokenCookieOptions(envConfig.STAGE)
+  );
+
+  response.cookie(
+    COOKIE_NAMES.refreshToken,
+    newRefreshToken,
+    getRefreshTokenCookieOptions(envConfig.STAGE)
+  );
+};
