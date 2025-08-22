@@ -48,7 +48,7 @@ app.use((request, response, next) => {
   const ALLOWED_ORIGINS = ['https://yourdomain.com', 'https://www.yourdomain.com'];
 
   if (process.env.STAGE !== STAGES.Prod) {
-    ALLOWED_ORIGINS.push('http://localhost:3001');
+    ALLOWED_ORIGINS.push(`http://localhost:${envConfig.APP_PORT}`);
     ALLOWED_ORIGINS.push('http://localhost:5173');
   }
 
