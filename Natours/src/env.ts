@@ -16,6 +16,7 @@ const envSchema = z.object({
   JWT_REFRESH_TOKEN_SECRET: z.string(),
   JWT_ACCESS_TOKEN_SECRET: z.string(),
   COOKIE_SECRET: z.string(),
+  RESEND_API_KEY: z.string(),
 });
 
 export const envConfig = envSchema.parse({
@@ -25,6 +26,7 @@ export const envConfig = envSchema.parse({
   JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
   JWT_ACCESS_TOKEN_SECRET: process.env.JWT_ACCESS_TOKEN_SECRET,
   COOKIE_SECRET: process.env.COOKIE_SECRET,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

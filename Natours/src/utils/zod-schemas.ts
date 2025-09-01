@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const emailSchema = z.string().email('Please enter a valid email address').toLowerCase();
+export const emailSchema = z.string().email('Please enter a valid email address.').toLowerCase();
 /**  Add refine if email has own domain
  * export const emailSchema = z.string()
  * 	.email('Please enter a valid email address')
