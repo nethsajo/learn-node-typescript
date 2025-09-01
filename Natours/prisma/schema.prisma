@@ -11,15 +11,21 @@ datasource db {
 
 model accounts {
   id         Int       @id @default(autoincrement())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
+  created_at DateTime  @default(now()) @db.DateTime(3)
+  updated_at DateTime  @default(now()) @db.DateTime(3)
   deleted_at DateTime?
   email      String    @unique
   password   String
 
+  // Password Reset Fields
+  reset_code          String?   @db.VarChar(6)
+  reset_code_expires  DateTime? @db.DateTime(3)
+  reset_attempts      Int       @default(0)
+  reset_blocked_until DateTime? @db.DateTime(3)
+
   // Relations
-  user     users?
   sessions sessions[]
+  user     users?
 
   // Indexes
   @@index([created_at])
@@ -30,8 +36,8 @@ model accounts {
 
 model sessions {
   id            Int       @id @default(autoincrement())
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @default(now())
+  created_at    DateTime  @default(now()) @db.DateTime(3)
+  updated_at    DateTime  @default(now()) @db.DateTime(3)
   deleted_at    DateTime?
   refresh_token String    @unique @db.VarChar(512)
 
