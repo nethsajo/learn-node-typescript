@@ -33,6 +33,14 @@ export class NotFoundError extends Error {
   }
 }
 
+export class ConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConflictError';
+    this.message = message;
+  }
+}
+
 export function makeError<TError extends Error>(error: TError) {
   const defaultError = {
     name: error.name,
@@ -44,6 +52,13 @@ export function makeError<TError extends Error>(error: TError) {
     return {
       statusCode: StatusCodes.BAD_REQUEST,
       error: { name: 'BadRequestError', message: error.message },
+    };
+  }
+
+  if (error.message.includes('jwt malformed')) {
+    return {
+      statusCode: StatusCodes.BAD_REQUEST,
+      error: { name: 'BadRequestError', message: 'Invalid token format.' },
     };
   }
 
@@ -85,6 +100,13 @@ export function makeError<TError extends Error>(error: TError) {
   if (error instanceof NotFoundError) {
     return {
       statusCode: StatusCodes.NOT_FOUND,
+      error: defaultError,
+    };
+  }
+
+  if (error instanceof ConflictError) {
+    return {
+      statusCode: StatusCodes.CONFLICT,
       error: defaultError,
     };
   }
