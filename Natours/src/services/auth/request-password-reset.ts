@@ -2,12 +2,12 @@ import { checkResetBlockedData } from '@/data/accounts/check-reset-blocked';
 import { getAccountData } from '@/data/accounts/get-account';
 import { setResetCodeData } from '@/data/accounts/set-reset-code';
 import type { DbClient } from '@/db/create-db-client';
-import { envConfig } from '@/env';
+// import { envConfig } from '@/env';
 import { BadRequestError } from '@/utils/errors';
 import { generateResetCode } from '@/utils/generate-reset-code';
-import { Resend } from 'resend';
+// import { Resend } from 'resend';
 
-const resend = new Resend(envConfig.RESEND_API_KEY);
+// const resend = new Resend(envConfig.RESEND_API_KEY);
 
 export type RequestPasswordResetServiceDependencies = {
   checkResetBlockedData: typeof checkResetBlockedData;

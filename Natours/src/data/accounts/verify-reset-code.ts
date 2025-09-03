@@ -62,7 +62,7 @@ export async function verifyResetCodeData({ dbClient, email, resetCode }: Verify
       .updateTable('accounts')
       .set({
         reset_attempts: newAttempts,
-        reset_blocked_until: shouldBlock ? sql`NOW + INTERVAL 15 MINUTE` : null,
+        reset_blocked_until: shouldBlock ? sql`NOW() + INTERVAL 15 MINUTE` : null,
         updated_at: sql`NOW()`,
       })
       .where('id', '=', account.id)

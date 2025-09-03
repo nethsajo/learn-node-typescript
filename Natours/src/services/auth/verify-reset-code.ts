@@ -39,7 +39,7 @@ export async function verifyResetCodeService({
     }
 
     if ('attemptsLeft' in result && result.attemptsLeft !== undefined && result.attemptsLeft > 0) {
-      throw new Error(`Invalid code. ${result.attemptsLeft} attempts remaining.`);
+      throw new BadRequestError(`Invalid code. ${result.attemptsLeft} attempts remaining.`);
     }
 
     throw new BadRequestError(result.error || 'Invalid or expired code.');
