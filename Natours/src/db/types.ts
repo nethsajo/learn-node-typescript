@@ -10,6 +10,7 @@ export type accounts = {
     updated_at: Generated<Timestamp>;
     deleted_at: Timestamp | null;
     email: string;
+    username: string | null;
     password: string;
     reset_code: string | null;
     reset_code_expires: Timestamp | null;

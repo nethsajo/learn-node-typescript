@@ -15,6 +15,7 @@
     "./pnpm-lock.yaml",
     "./Dockerfile",
     "./docker-compose.yaml",
-    "./docker-compose-db.yaml"
+    "./docker-compose-db.yaml",
+    "./redis.conf"
   ]
 }
