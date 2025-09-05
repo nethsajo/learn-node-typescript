@@ -1,4 +1,4 @@
-import type { accounts, DB, locations, sessions, users } from './types';
+import type { accounts, DB, sessions, users } from './types';
 
 type OverrideCommonFields<Schema> = Omit<
   Schema,
@@ -10,9 +10,17 @@ type OverrideCommonFields<Schema> = Omit<
   deleted_at: Date | string | null;
 };
 
-export type Account = OverrideCommonFields<accounts>;
+type OverrideAccounts = Omit<
+  OverrideCommonFields<accounts>,
+  'reset_attempts' | 'reset_code_expires' | 'reset_blocked_until'
+> & {
+  reset_attempts: number;
+  reset_code_expires: Date | string | null;
+  reset_blocked_until: Date | string | null;
+};
+
+export type Account = OverrideAccounts;
 export type User = OverrideCommonFields<users>;
 export type Session = OverrideCommonFields<sessions>;
-export type Location = OverrideCommonFields<locations>;
 
 export type KyselySchema = DB;

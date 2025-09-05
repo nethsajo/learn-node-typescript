@@ -11,17 +11,17 @@ datasource db {
 
 model accounts {
   id         Int       @id @default(autoincrement())
-  created_at DateTime  @default(now()) @db.DateTime(3)
-  updated_at DateTime  @default(now()) @db.DateTime(3)
+  created_at DateTime  @default(now()) @db.Timestamp(3)
+  updated_at DateTime  @default(now()) @db.Timestamp(3)
   deleted_at DateTime?
   email      String    @unique
   password   String
 
   // Password Reset Fields
   reset_code          String?   @db.VarChar(6)
-  reset_code_expires  DateTime? @db.DateTime(3)
+  reset_code_expires  DateTime? @db.Timestamp(3)
   reset_attempts      Int       @default(0)
-  reset_blocked_until DateTime? @db.DateTime(3)
+  reset_blocked_until DateTime? @db.Timestamp(3)
 
   // Relations
   sessions sessions[]
@@ -36,8 +36,8 @@ model accounts {
 
 model sessions {
   id            Int       @id @default(autoincrement())
-  created_at    DateTime  @default(now()) @db.DateTime(3)
-  updated_at    DateTime  @default(now()) @db.DateTime(3)
+  created_at    DateTime  @default(now()) @db.Timestamp(3)
+  updated_at    DateTime  @default(now()) @db.Timestamp(3)
   deleted_at    DateTime?
   refresh_token String    @unique @db.VarChar(512)
 
@@ -56,8 +56,8 @@ model sessions {
 
 model users {
   id         Int       @id @default(autoincrement())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
+  created_at DateTime  @default(now()) @db.Timestamp(3)
+  updated_at DateTime  @default(now()) @db.Timestamp(3)
   deleted_at DateTime?
   first_name String?
   last_name  String?
@@ -74,18 +74,4 @@ model users {
   @@index([deleted_at])
   @@index([first_name])
   @@index([last_name])
-}
-
-model locations {
-  id         Int       @id @default(autoincrement())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
-  deleted_at DateTime?
-  name       String?
-
-  // Indexes
-  @@index([created_at])
-  @@index([updated_at])
-  @@index([deleted_at])
-  @@index([name])
 }

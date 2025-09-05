@@ -16,13 +16,6 @@ export type accounts = {
     reset_attempts: Generated<number>;
     reset_blocked_until: Timestamp | null;
 };
-export type locations = {
-    id: Generated<number>;
-    created_at: Generated<Timestamp>;
-    updated_at: Generated<Timestamp>;
-    deleted_at: Timestamp | null;
-    name: string | null;
-};
 export type sessions = {
     id: Generated<number>;
     created_at: Generated<Timestamp>;
@@ -42,7 +35,6 @@ export type users = {
 };
 export type DB = {
     accounts: accounts;
-    locations: locations;
     sessions: sessions;
     users: users;
 };
