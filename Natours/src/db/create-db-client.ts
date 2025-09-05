@@ -17,7 +17,7 @@ export function createDbClient() {
     }),
   });
 
-  logger.info('Database connection established');
+  logger.info('💾 Database connection established');
 
   return dbClient;
 }

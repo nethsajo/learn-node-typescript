@@ -16,6 +16,7 @@ import { envConfig } from './env';
 import { setupDbClientMiddleware } from './middlewares/setup-db-client';
 import { STAGES } from './constants/env';
 import { isNotProduction } from './middlewares/stage-guard';
+import { rateLimiterMiddleware } from './middlewares/rate-limit';
 
 const app = express();
 
@@ -68,6 +69,7 @@ app.use((request, response, next) => {
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(rateLimiterMiddleware);
 app.use(setupDbClientMiddleware);
 app.use(cookieParser(envConfig.COOKIE_SECRET));
 
