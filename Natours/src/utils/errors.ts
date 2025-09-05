@@ -41,6 +41,14 @@ export class ConflictError extends Error {
   }
 }
 
+export class TooManyRequestsError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'TooManyRequestsError';
+    this.message = message;
+  }
+}
+
 export function makeError<TError extends Error>(error: TError) {
   const defaultError = {
     name: error.name,
@@ -107,6 +115,13 @@ export function makeError<TError extends Error>(error: TError) {
   if (error instanceof ConflictError) {
     return {
       statusCode: StatusCodes.CONFLICT,
+      error: defaultError,
+    };
+  }
+
+  if (error instanceof TooManyRequestsError) {
+    return {
+      statusCode: StatusCodes.TOO_MANY_REQUESTS,
       error: defaultError,
     };
   }
