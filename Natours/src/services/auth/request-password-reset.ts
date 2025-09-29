@@ -2,18 +2,18 @@ import { checkResetBlockedData } from '@/data/accounts/check-reset-blocked';
 import { getAccountData } from '@/data/accounts/get-account';
 import { setResetCodeData } from '@/data/accounts/set-reset-code';
 import type { DbClient } from '@/db/create-db-client';
-// import { envConfig } from '@/env';
+import { envConfig } from '@/env';
+import { sendEmail } from '@/lib/email';
+import { getForgotPasswordTemplate } from '@/utils/email-template';
 import { BadRequestError } from '@/utils/errors';
 import { generateResetCode } from '@/utils/generate-reset-code';
-// import { Resend } from 'resend';
-
-// const resend = new Resend(envConfig.RESEND_API_KEY);
 
 export type RequestPasswordResetServiceDependencies = {
   checkResetBlockedData: typeof checkResetBlockedData;
   getAccountData: typeof getAccountData;
   generateResetCode: typeof generateResetCode;
   setResetCodeData: typeof setResetCodeData;
+  sendEmail: typeof sendEmail;
 };
 
 export type RequestPasswordResetServiceArgs = {
@@ -30,6 +30,7 @@ export async function requestPasswordResetService({
     getAccountData,
     generateResetCode,
     setResetCodeData,
+    sendEmail,
   },
 }: RequestPasswordResetServiceArgs) {
   const blockStatus = await dependencies.checkResetBlockedData({ dbClient, email });
@@ -56,13 +57,19 @@ export async function requestPasswordResetService({
   // Save reset code to database
   await setResetCodeData({ dbClient, accountId: account.id, resetCode });
 
+  const emailTemplate = getForgotPasswordTemplate({
+    email,
+    resetCode,
+  });
+
   // Send email with reset code
-  // const test = await resend.emails.send({
-  //   from: 'nethsajo98@gmail.com',
-  //   to: email,
-  //   subject: 'Password Reset Code for APP_NAME',
-  //   html: '<strong>It works!</strong>',
-  // });
+  await dependencies.sendEmail({
+    env: envConfig,
+    to: email,
+    subject: emailTemplate.subject,
+    html: emailTemplate.html,
+    text: emailTemplate.text,
+  });
 
   return {
     success: true,
