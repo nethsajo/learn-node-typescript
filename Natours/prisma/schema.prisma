@@ -35,26 +35,6 @@ model accounts {
   @@index([email])
 }
 
-model sessions {
-  id            Int       @id @default(autoincrement())
-  created_at    DateTime  @default(now()) @db.Timestamp(3)
-  updated_at    DateTime  @default(now()) @db.Timestamp(3)
-  deleted_at    DateTime?
-  refresh_token String    @unique @db.VarChar(512)
-
-  // Foreign Keys
-  account_id Int?
-
-  // Relations
-  account accounts? @relation(fields: [account_id], references: [id])
-
-  // Indexes
-  @@index([created_at])
-  @@index([updated_at])
-  @@index([deleted_at])
-  @@index([account_id])
-}
-
 model users {
   id         Int       @id @default(autoincrement())
   created_at DateTime  @default(now()) @db.Timestamp(3)
@@ -75,4 +55,69 @@ model users {
   @@index([deleted_at])
   @@index([first_name])
   @@index([last_name])
+}
+
+model sessions {
+  id            Int       @id @default(autoincrement())
+  created_at    DateTime  @default(now()) @db.Timestamp(3)
+  updated_at    DateTime  @default(now()) @db.Timestamp(3)
+  deleted_at    DateTime?
+  refresh_token String    @unique @db.VarChar(512)
+
+  // Foreign Keys
+  account_id Int?
+
+  // Relations
+  account accounts? @relation(fields: [account_id], references: [id])
+
+  // Indexes
+  @@index([created_at])
+  @@index([updated_at])
+  @@index([deleted_at])
+  @@index([account_id])
+}
+
+model roles {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  created_at DateTime  @default(now()) @db.Timestamp(3)
+  updated_at DateTime  @default(now()) @db.Timestamp(3)
+  deleted_at DateTime?
+
+  // Relations
+  permission_role permission_role[]
+
+  // Indexes
+  @@index([created_at])
+  @@index([updated_at])
+  @@index([deleted_at])
+}
+
+model permissions {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  created_at DateTime  @default(now()) @db.Timestamp(3)
+  updated_at DateTime  @default(now()) @db.Timestamp(3)
+  deleted_at DateTime?
+
+  // Relations
+  permission_role permission_role[]
+
+  // Indexes
+  @@index([created_at])
+  @@index([updated_at])
+  @@index([deleted_at])
+}
+
+model permission_role {
+  // Foreign Keys
+  role_id       Int
+  permission_id Int
+
+  // Relations
+  role       roles       @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission permissions @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@id([role_id, permission_id])
+  @@index([permission_id])
 }
