@@ -14,6 +14,15 @@ CREATE TABLE `roles` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `account_role` (
+    `account_id` INTEGER NOT NULL,
+    `role_id` INTEGER NOT NULL,
+
+    INDEX `account_role_role_id_account_id_idx`(`role_id`, `account_id`),
+    PRIMARY KEY (`account_id`, `role_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `permissions` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
@@ -33,9 +42,15 @@ CREATE TABLE `permission_role` (
     `role_id` INTEGER NOT NULL,
     `permission_id` INTEGER NOT NULL,
 
-    INDEX `permission_role_permission_id_idx`(`permission_id`),
+    INDEX `permission_role_role_id_permission_id_idx`(`role_id`, `permission_id`),
     PRIMARY KEY (`role_id`, `permission_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `account_role` ADD CONSTRAINT `account_role_account_id_fkey` FOREIGN KEY (`account_id`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `account_role` ADD CONSTRAINT `account_role_role_id_fkey` FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `permission_role` ADD CONSTRAINT `permission_role_role_id_fkey` FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

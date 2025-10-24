@@ -4,6 +4,10 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export type account_role = {
+    account_id: number;
+    role_id: number;
+};
 export type accounts = {
     id: Generated<number>;
     created_at: Generated<Timestamp>;
@@ -53,6 +57,7 @@ export type users = {
     account_id: number | null;
 };
 export type DB = {
+    account_role: account_role;
     accounts: accounts;
     permission_role: permission_role;
     permissions: permissions;

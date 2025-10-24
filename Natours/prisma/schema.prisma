@@ -25,8 +25,9 @@ model accounts {
   reset_blocked_until DateTime? @db.Timestamp(3)
 
   // Relations
-  sessions sessions[]
-  user     users?
+  sessions     sessions[]
+  user         users?
+  account_role account_role[]
 
   // Indexes
   @@index([created_at])
@@ -86,11 +87,25 @@ model roles {
 
   // Relations
   permission_role permission_role[]
+  account_role    account_role[]
 
   // Indexes
   @@index([created_at])
   @@index([updated_at])
   @@index([deleted_at])
+}
+
+model account_role {
+  // Foreign Keys
+  account_id Int
+  role_id    Int
+
+  // Relations
+  account accounts @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  role    roles    @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  @@id([account_id, role_id])
+  @@index([role_id, account_id])
 }
 
 model permissions {
@@ -119,5 +134,5 @@ model permission_role {
   permission permissions @relation(fields: [permission_id], references: [id], onDelete: Cascade)
 
   @@id([role_id, permission_id])
-  @@index([permission_id])
+  @@index([role_id, permission_id])
 }
