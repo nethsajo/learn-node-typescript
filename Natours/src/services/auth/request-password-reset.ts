@@ -4,7 +4,7 @@ import { setResetCodeData } from '@/data/accounts/set-reset-code';
 import type { DbClient } from '@/db/create-db-client';
 import { envConfig } from '@/env';
 import { sendEmail } from '@/lib/email';
-import { getForgotPasswordTemplate } from '@/utils/email-template';
+import { getForgotPasswordTemplate } from '@/utils/email-templates';
 import { BadRequestError } from '@/utils/errors';
 import { generateResetCode } from '@/utils/generate-reset-code';
 
